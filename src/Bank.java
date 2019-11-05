@@ -104,6 +104,7 @@ public class Bank
 
     public static void main(String[] args)
     {
+        loaddata();
         Bank bank = new Bank();
         bank.RunATM(0);
     }

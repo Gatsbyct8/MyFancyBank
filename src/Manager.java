@@ -14,4 +14,7 @@ public class Manager extends Person
     {
         return managerID;
     }
+    public boolean add();
+    public boolean update();
+    public boolean delete();
 }
