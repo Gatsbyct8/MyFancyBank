@@ -8,6 +8,7 @@ public class Customer extends Person
     private String passcode;
     private List<Account> accounts;
     private List<Loan> loans;
+    private List<SecureAccount> secureAccount;
 
     Customer(Name name, Address address, String phoneNumber, String UserID, String passcode)
     {
