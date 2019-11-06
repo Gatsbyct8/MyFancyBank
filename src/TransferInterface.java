@@ -11,18 +11,18 @@ import java.awt.event.WindowEvent;
 public class TransferInterface extends JFrame
 {
     private Bank bank;
-    private Account account;
+    private MoneyAccount moneyAccount;
     private Balance balance;
     private AccountInterface father;
 
     private JTextField amountField=new JTextField(20);   // transfer amount
     private JTextField idField=new JTextField(20);   // target account
 
-    TransferInterface(AccountInterface father, Bank bank, Account account, Balance balance)
+    TransferInterface(AccountInterface father, Bank bank, MoneyAccount moneyAccount, Balance balance)
     {
         this.father = father;
         this.bank = bank;
-        this.account = account;
+        this.moneyAccount = moneyAccount;
         this.balance = balance;
 
         setTitle("Transfer");
@@ -81,33 +81,33 @@ public class TransferInterface extends JFrame
         {
             if(isValid(amountField.getText()) && isValid(idField.getText()))
             {
-                Account targetAccount = findAccount(idField.getText());
-                if(targetAccount == null)
+                MoneyAccount targetMoneyAccount = findAccount(idField.getText());
+                if(targetMoneyAccount == null)
                 {
                     MessageDialog amountError = new MessageDialog("Error", "Wrong account id!");
                     amountError.setVisible(true);
                     return;
                 }
                 double transferAmount = Double.valueOf(amountField.getText());
-                if(!((CheckingAccount)account).transferOut(balance, transferAmount, targetAccount))
+                if(!((CheckingAccount) moneyAccount).transferOut(balance, transferAmount, targetMoneyAccount))
                 {
                     MessageDialog amountError = new MessageDialog("Error", "No enough money!");
                     amountError.setVisible(true);
                     return;
                 }
                 double interestRate = 0;
-                if(targetAccount instanceof SavingAccount)
+                if(targetMoneyAccount instanceof SavingAccount)
                 {
                     interestRate = Bank.getSavingAccountDepositInterestRate();
                 }
-                if(targetAccount instanceof CheckingAccount)
+                if(targetMoneyAccount instanceof CheckingAccount)
                 {
                     interestRate = Bank.getCheckingAccountDepositInterestRate();
                 }
 
                 Balance targetBalance = null;
                 //Search the target balance of target account.
-                for(Balance item : targetAccount.getBalance())
+                for(Balance item : targetMoneyAccount.getBalance())
                 {
                     if(item.getCurrency().equals(balance.getCurrency()))
                     {
@@ -120,10 +120,10 @@ public class TransferInterface extends JFrame
                 if(targetBalance == null)
                 {
                     Balance newBalance = new Balance(balance.getCurrency());
-                    targetAccount.addNewBalance(newBalance);
+                    targetMoneyAccount.addNewBalance(newBalance);
                     targetBalance = newBalance;
                 }
-                targetAccount.transferIn(targetBalance, interestRate, transferAmount, account);
+                targetMoneyAccount.transferIn(targetBalance, interestRate, transferAmount, moneyAccount);
 
                 father.initAccountList();
             }
@@ -138,22 +138,22 @@ public class TransferInterface extends JFrame
         }
     }
 
-    private Account findAccount(String id)
+    private MoneyAccount findAccount(String id)
     {
-        Account targetAccount = null;
+        MoneyAccount targetMoneyAccount = null;
         for(Customer customer : bank.getCustomers())
         {
             for(Account account : customer.getAccounts())
             {
-                if(account.getAccountID().equals(id))
+                if(account.getAccountID().equals(id) && (account instanceof MoneyAccount))
                 {
-                    targetAccount = account;
-                    return  targetAccount;
+                    targetMoneyAccount = (MoneyAccount)account;
+                    return targetMoneyAccount;
                 }
             }
         }
 
-        return targetAccount;
+        return targetMoneyAccount;
     }
 
     private boolean isValid(String str)

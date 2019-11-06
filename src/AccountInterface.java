@@ -9,7 +9,7 @@ public class AccountInterface extends JFrame
 {
     Bank bank;
     private List<Account> accounts;
-    private Account currentAccount;
+    private MoneyAccount currentMoneyAccount;
     private Balance currentBalance;
     private CustomerHomePage father;
     private AccountInterface self = this;
@@ -128,22 +128,22 @@ public class AccountInterface extends JFrame
             if(ItemEvent.SELECTED == e.getStateChange())
             {
                 String selectAccount = e.getItem().toString();
-                String accountID = selectAccount.substring(selectAccount.length()-16, selectAccount.length());
+                String accountID = selectAccount.substring(selectAccount.length()-4, selectAccount.length());
                 for(Account item : accounts)
                 {
-                    if(item.getAccountID().equals(accountID))
+                    if(item.getAccountID().equals(accountID) && (item instanceof MoneyAccount))
                     {
-                        currentAccount = item;
+                        currentMoneyAccount = (MoneyAccount) item;
                         break;
                     }
                 }
 
                 balanceList.removeAllItems();
-                for(Balance item : currentAccount.getBalance())
+                for(Balance item : currentMoneyAccount.getBalance())
                 {
                     balanceList.addItem(item.getCurrencyType());
                 }
-                for(Balance item : currentAccount.getBalance())
+                for(Balance item : currentMoneyAccount.getBalance())
                 {
                     if(item.getCurrencyType().equals(balanceList.getItemAt(0)))
                     {
@@ -152,11 +152,11 @@ public class AccountInterface extends JFrame
                     }
                 }
 
-                if(currentAccount instanceof SavingAccount)
+                if(currentMoneyAccount instanceof SavingAccount)
                 {
                     jbtTransfer.setEnabled(false);
                 }
-                if(currentAccount instanceof CheckingAccount)
+                if(currentMoneyAccount instanceof CheckingAccount)
                 {
                     jbtTransfer.setEnabled(true);
                 }
@@ -177,7 +177,7 @@ public class AccountInterface extends JFrame
                 {
                     return;
                 }
-                for(Balance item : currentAccount.getBalance())
+                for(Balance item : currentMoneyAccount.getBalance())
                 {
                     if(item.getCurrencyType().equals(selectBalance))
                     {
@@ -198,7 +198,7 @@ public class AccountInterface extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            DepositInterface depositInterface = new DepositInterface(self, currentAccount, currentBalance);
+            DepositInterface depositInterface = new DepositInterface(self, currentMoneyAccount, currentBalance);
             setEnabled(false);
             depositInterface.setVisible(true);
         }
@@ -209,7 +209,7 @@ public class AccountInterface extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            WithdrawInterface withdrawInterface = new WithdrawInterface(self, currentAccount, currentBalance);
+            WithdrawInterface withdrawInterface = new WithdrawInterface(self, currentMoneyAccount, currentBalance);
             setEnabled(false);
             withdrawInterface.setVisible(true);
         }
@@ -220,7 +220,7 @@ public class AccountInterface extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            TransferInterface transferInterface = new TransferInterface(self, bank, currentAccount, currentBalance);
+            TransferInterface transferInterface = new TransferInterface(self, bank, currentMoneyAccount, currentBalance);
             setEnabled(false);
             transferInterface.setVisible(true);
         }

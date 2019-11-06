@@ -91,7 +91,7 @@ public class OpenNewAccount extends JDialog
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            Account newAccount = AccountType.getAccount(newAccountType);
+            MoneyAccount newAccount = AccountType.getAccount(newAccountType);
             if(USDBox.isSelected())
             {
                 Balance newBalance = new Balance(CurrencyType.getCurrencyType(CurrencyType.USD));
@@ -125,8 +125,8 @@ public class OpenNewAccount extends JDialog
             }
 
             // Update the maxID of this bank
-            Account.maxIDIncrease();
-            newAccount.setAccountID(Account.getMaxID());
+            MoneyAccount.maxIDIncrease();
+            newAccount.setAccountID(MoneyAccount.getMaxID());
             accounts.add(newAccount);
 
             //add the open account fee as income of the bank

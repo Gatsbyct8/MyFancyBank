@@ -10,16 +10,16 @@ import java.awt.event.WindowEvent;
  */
 public class DepositInterface extends JFrame
 {
-    private Account account;
+    private MoneyAccount moneyAccount;
     private Balance balance;
     private AccountInterface father;
 
     private JTextField amountField=new JTextField(5);   // get the amount of this deposit
 
-    DepositInterface(AccountInterface father, Account account, Balance balance)
+    DepositInterface(AccountInterface father, MoneyAccount moneyAccount, Balance balance)
     {
         this.father = father;
-        this.account = account;
+        this.moneyAccount = moneyAccount;
         this.balance = balance;
 
         setTitle("Deposit");
@@ -76,13 +76,13 @@ public class DepositInterface extends JFrame
             if(isValid(amountField.getText()))
             {
                 double depositAmount = Double.valueOf(amountField.getText());
-                if(account instanceof SavingAccount)    // check the type of account, for different account has different interest rate
+                if(moneyAccount instanceof SavingAccount)    // check the type of account, for different account has different interest rate
                 {
-                    account.deposit(balance, Bank.getSavingAccountDepositInterestRate(), depositAmount);
+                    moneyAccount.deposit(balance, Bank.getSavingAccountDepositInterestRate(), depositAmount);
                 }
-                if(account instanceof CheckingAccount)
+                if(moneyAccount instanceof CheckingAccount)
                 {
-                    account.deposit(balance, Bank.getCheckingAccountDepositInterestRate(), depositAmount);
+                    moneyAccount.deposit(balance, Bank.getCheckingAccountDepositInterestRate(), depositAmount);
                 }
 
                 closeFrame();

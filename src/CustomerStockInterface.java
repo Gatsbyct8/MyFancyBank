@@ -37,8 +37,8 @@ public class CustomerStockInterface extends JFrame
         secureAccountJComboBox.setEnabled(true);
         secureAccountJComboBoxListener secureAccountJComboBoxL = new secureAccountJComboBoxListener();
         secureAccountJComboBox.addItemListener(secureAccountJComboBoxL);
-        List<Account> accounts = customer.getAccounts();
-        for(Account item : accounts)
+        List<Account> Accounts = customer.getAccounts();
+        for(Account item : Accounts)
         {
 
         }

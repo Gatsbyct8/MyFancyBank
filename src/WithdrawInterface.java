@@ -10,13 +10,13 @@ import java.awt.event.WindowEvent;
  */
 public class WithdrawInterface extends JDialog
 {
-    private Account account;
+    private MoneyAccount account;
     private Balance balance;
     private AccountInterface father;
 
     private JTextField amountField=new JTextField(4);   // withdraw amount
 
-    WithdrawInterface(AccountInterface father, Account account, Balance balance)
+    WithdrawInterface(AccountInterface father, MoneyAccount account, Balance balance)
     {
         this.father = father;
         this.account = account;

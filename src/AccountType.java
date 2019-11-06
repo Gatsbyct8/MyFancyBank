@@ -3,7 +3,7 @@ public enum AccountType
     CHECKING,
     SAVING;
 
-    public static Account getAccount(AccountType type)
+    public static MoneyAccount getAccount(AccountType type)
     {
         switch(type)
         {

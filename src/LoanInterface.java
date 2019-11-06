@@ -16,8 +16,8 @@ public class LoanInterface extends JFrame
     private List<Account> accounts;
     private Customer customer;
     private CollateralType collateral;
-    private Account targetAccount;
-    private Account repayAccount;
+    private MoneyAccount targetAccount;
+    private MoneyAccount repayAccount;
 
     private JTextField amountField = new JTextField(4);
     private JComboBox collateralList = new JComboBox<String>();
@@ -146,12 +146,12 @@ public class LoanInterface extends JFrame
             if(ItemEvent.SELECTED == e.getStateChange())
             {
                 String selectAccount = e.getItem().toString();
-                String accountID = selectAccount.substring(selectAccount.length()-16);
+                String accountID = selectAccount.substring(selectAccount.length()-4);
                 for(Account item : accounts)
                 {
-                    if(item.getAccountID().equals(accountID))
+                    if(item.getAccountID().equals(accountID) && (item instanceof MoneyAccount))
                     {
-                        targetAccount = item;
+                        targetAccount = (MoneyAccount) item;
                         break;
                     }
                 }
@@ -167,12 +167,12 @@ public class LoanInterface extends JFrame
             if(ItemEvent.SELECTED == e.getStateChange())
             {
                 String selectAccount = e.getItem().toString();
-                String accountID = selectAccount.substring(selectAccount.length()-16);
+                String accountID = selectAccount.substring(selectAccount.length()-4);
                 for(Account item : accounts)
                 {
-                    if(item.getAccountID().equals(accountID))
+                    if(item.getAccountID().equals(accountID) && (item instanceof MoneyAccount))
                     {
-                        repayAccount = item;
+                        repayAccount = (MoneyAccount) item;
                         break;
                     }
                 }

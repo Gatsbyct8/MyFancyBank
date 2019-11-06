@@ -76,15 +76,22 @@ public class ReportInterface extends JFrame
         transactionTableModel.setRowCount(0);
         for(Customer customer : bank.getCustomers())
         {
-            for (Account account : customer.getAccounts()) {
-                for (Balance balance : account.getBalance()) {
-                    for (Transaction transaction : balance.getTransactions()) {
-                        String acc = account.getAccountID();    // account ID
-                        String currencyType = balance.getCurrencyType();
-                        String amount = String.format(" %.2f", transaction.getAmount());
-                        String sNtID = transaction.getSourceNtargetID();    // source or target ID
-                        String date = transaction.getDate().toString();
-                        transactionTableModel.addRow(new String[]{acc, currencyType, amount, sNtID, date});
+            for (Account account : customer.getAccounts())
+            {
+                if(account instanceof MoneyAccount)
+                {
+                    MoneyAccount moneyAccount = (MoneyAccount)account;
+                    for (Balance balance : moneyAccount.getBalance())
+                    {
+                        for (Transaction transaction : balance.getTransactions())
+                        {
+                            String acc = moneyAccount.getAccountID();    // account ID
+                            String currencyType = balance.getCurrencyType();
+                            String amount = String.format(" %.2f", transaction.getAmount());
+                            String sNtID = transaction.getSourceNtargetID();    // source or target ID
+                            String date = transaction.getDate().toString();
+                            transactionTableModel.addRow(new String[]{acc, currencyType, amount, sNtID, date});
+                        }
                     }
                 }
             }

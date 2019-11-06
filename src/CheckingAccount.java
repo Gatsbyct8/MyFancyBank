@@ -1,9 +1,9 @@
-import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Date;
-import java.util.List;
+import java.util.Locale;
 
 
-public class CheckingAccount extends Account
+public class CheckingAccount extends MoneyAccount
 {
     public static final AccountType type = AccountType.CHECKING;
 
@@ -19,10 +19,13 @@ public class CheckingAccount extends Account
 
     public void initForTest()
     {
-        Balance newBalance = new Balance();
+        Balance newBalance = new Balance(Currency.getInstance(Locale.US));
         newBalance.initForTest();
         balance.add(newBalance);
-        accountID = "0000000000000002";
+        newBalance = new Balance(Currency.getInstance(Locale.FRANCE));
+        balance.add(newBalance);
+        newBalance = new Balance(Currency.getInstance(Locale.CHINA));
+        balance.add(newBalance);
     }
 
     public boolean withdraw(Balance balance, double interestRate, double amount, double withdrawFee)
@@ -47,7 +50,7 @@ public class CheckingAccount extends Account
         }
     }
 
-    public boolean transferOut(Balance balance, double amount, Account targetAccount)
+    public boolean transferOut(Balance balance, double amount, MoneyAccount targetAccount)
     {
         calculateCurrentInterest(balance, Bank.getCheckingAccountDepositInterestRate());
         if(amount <= balance.getAmount())

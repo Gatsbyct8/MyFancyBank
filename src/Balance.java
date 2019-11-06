@@ -51,7 +51,9 @@ public class Balance
     {
         amount = 100;
 
-        Transaction newTransaction = new Transaction(new Date(), -20, "0000000000000003");
+        Transaction newTransaction = new Transaction(new Date(), 5, "Deposit");
+        transactions.add(newTransaction);
+        newTransaction = new Transaction(new Date(), -5, "Open account");
         transactions.add(newTransaction);
     }
 

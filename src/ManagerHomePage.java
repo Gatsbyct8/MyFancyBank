@@ -117,16 +117,20 @@ public class ManagerHomePage extends JFrame
         transactionTableModel.setRowCount(0);
         for(Account account : selectedCustomer.getAccounts())
         {
-            for(Balance balance : account.getBalance())
+            if(account instanceof MoneyAccount)
             {
-                for(Transaction transaction : balance.getTransactions())
+                MoneyAccount moneyAccount = (MoneyAccount)account;
+                for (Balance balance : moneyAccount.getBalance())
                 {
-                    String acc = account.getAccountID();    // account ID
-                    String currencyType = balance.getCurrencyType();
-                    String amount = String.format(" %.2f",transaction.getAmount());
-                    String sNtID = transaction.getSourceNtargetID();    // source or target ID
-                    String date = transaction.getDate().toString();
-                    transactionTableModel.addRow(new String[]{acc, currencyType, amount,sNtID, date});
+                    for (Transaction transaction : balance.getTransactions())
+                    {
+                        String acc = moneyAccount.getAccountID();    // account ID
+                        String currencyType = balance.getCurrencyType();
+                        String amount = String.format(" %.2f", transaction.getAmount());
+                        String sNtID = transaction.getSourceNtargetID();    // source or target ID
+                        String date = transaction.getDate().toString();
+                        transactionTableModel.addRow(new String[]{acc, currencyType, amount, sNtID, date});
+                    }
                 }
             }
         }

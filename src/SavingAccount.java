@@ -1,8 +1,7 @@
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.Currency;
+import java.util.Locale;
 
-public class SavingAccount extends Account
+public class SavingAccount extends MoneyAccount
 {
     public static final AccountType type = AccountType.SAVING;
 
@@ -18,11 +17,13 @@ public class SavingAccount extends Account
 
     public void initForTest()
     {
-        Balance newBalance = new Balance();
+        Balance newBalance = new Balance(Currency.getInstance(Locale.US));
         newBalance.initForTest();
         balance.add(newBalance);
-
-        accountID = "0000000000000001";
+        newBalance = new Balance(Currency.getInstance(Locale.FRANCE));
+        balance.add(newBalance);
+        newBalance = new Balance(Currency.getInstance(Locale.CHINA));
+        balance.add(newBalance);
     }
 
     /*public void moneyTransfer(Transaction transaction, Balance balance)
