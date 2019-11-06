@@ -25,7 +25,9 @@ public class Balance
     {
         return currency;
     }
-
+    public void setCurrency(Currency currency){
+        this.currency=currency;
+    }
     public String getCurrencyType()
     {
         return currency.getCurrencyCode();
@@ -39,6 +41,9 @@ public class Balance
     public double getAmount()
     {
         return amount;
+    }
+    public void setAmount(double amount){
+        this.amount=amount;
     }
 
     public void addNewTransaction(Transaction newTransaction)
