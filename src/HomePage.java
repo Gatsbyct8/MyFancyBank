@@ -3,33 +3,47 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Choose use this system as manager or customer
+ */
 public class HomePage extends JFrame
 {
-
     private Bank bank;
+    private HomePage self = this;
 
     public HomePage(Bank bank)
     {
         this.bank = bank;
 
         setTitle("Welcome to my bank");
-        setSize(400,150);
+        setSize(200,150);
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        Dimension buttonSize = new Dimension(150,25);
         JButton jbtCustomer = new JButton("Customer");
+        jbtCustomer.setPreferredSize(buttonSize);
         CustomerListener customerL = new CustomerListener();
         jbtCustomer.addActionListener(customerL);
         JButton jbtManager = new JButton("Manager");
+        jbtManager.setPreferredSize(buttonSize);
         ManagerListener managerL = new ManagerListener();
         jbtManager.addActionListener(managerL);
+        Font f = new Font("", Font.BOLD, 16);
+        jbtCustomer.setFont(f);
+        jbtManager.setFont(f);
 
-        JPanel panel = new JPanel();
-
-        panel.add(jbtCustomer);
-        panel.add(jbtManager);
-
-        add(panel, BorderLayout.CENTER);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(5,5,5,5);
+        add(jbtCustomer, c);
+        c.gridx = 0;
+        c.gridy = 1;
+        add(jbtManager, c);
     }
 
     class CustomerListener implements ActionListener
@@ -38,7 +52,7 @@ public class HomePage extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            LoginInterface customerLogin = new LoginInterface(bank, UserType.CUSTOMER);
+            LoginInterface customerLogin = new LoginInterface(bank, UserType.CUSTOMER, self);
             setVisible(false);
             customerLogin.setVisible(true);
         }
@@ -50,7 +64,7 @@ public class HomePage extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            LoginInterface ManagerLogin = new LoginInterface(bank, UserType.MANAGER);
+            LoginInterface ManagerLogin = new LoginInterface(bank, UserType.MANAGER, self);
             setVisible(false);
             ManagerLogin.setVisible(true);
         }

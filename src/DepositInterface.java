@@ -4,15 +4,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Date;
 
+/**
+ * GUI for deposit
+ */
 public class DepositInterface extends JFrame
 {
     private Account account;
     private Balance balance;
     private AccountInterface father;
 
-    private JTextField amountField=new JTextField(4);
+    private JTextField amountField=new JTextField(5);   // get the amount of this deposit
 
     DepositInterface(AccountInterface father, Account account, Balance balance)
     {
@@ -22,7 +24,7 @@ public class DepositInterface extends JFrame
 
         setTitle("Deposit");
         setSize(500,200);
-        setLayout(new FlowLayout());
+        setResizable(false);
         setLocationRelativeTo(null);
         addWindowListener(new WindowAdapter()
         {
@@ -33,23 +35,36 @@ public class DepositInterface extends JFrame
             }
         });
 
+        Font f = new Font("", Font.BOLD, 16);
+        amountField.setFont(f);
         JLabel amountLabel = new JLabel("Amount");
+        amountLabel.setFont(f);
         JPanel amountPanel = new JPanel();
         amountPanel.setLayout(new FlowLayout());
         amountPanel.add(amountLabel);
         amountPanel.add(amountField);
 
-        JLabel savingAccountInterestRate = new JLabel("SavingAccountInterestRate: " + String.valueOf(Bank.getSavingAccountDepositInterestRate()));
-        JLabel checkingAccountInterestRate = new JLabel("CheckingAccountInterestRate: " + String.valueOf(Bank.getCheckingAccountDepositInterestRate()));
+        JLabel savingAccountInterestRate = new JLabel("SavingAccountInterestRate: " + String.valueOf(Bank.getSavingAccountDepositInterestRate()), JLabel.CENTER);
+        JLabel checkingAccountInterestRate = new JLabel("CheckingAccountInterestRate: " + String.valueOf(Bank.getCheckingAccountDepositInterestRate()), JLabel.CENTER);
+        savingAccountInterestRate.setFont(f);
+        checkingAccountInterestRate.setFont(f);
 
+        JPanel okPanel = new JPanel();
         JButton jbtOK = new JButton("OK");
+        jbtOK.setFont(f);
+        Dimension jbtOKSize = new Dimension(50,45);
+        okPanel.setPreferredSize(jbtOKSize);
         okListener okL = new okListener();
         jbtOK.addActionListener(okL);
+        okPanel.add(jbtOK);
 
-        add(amountPanel);
-        add(savingAccountInterestRate);
-        add(checkingAccountInterestRate);
-        add(jbtOK);
+        add(amountPanel, BorderLayout.NORTH);
+        JPanel interestRatePanel = new JPanel();
+        interestRatePanel.setLayout(new BorderLayout());
+        interestRatePanel.add(savingAccountInterestRate, BorderLayout.NORTH);
+        interestRatePanel.add(checkingAccountInterestRate, BorderLayout.CENTER);
+        add(interestRatePanel, BorderLayout.CENTER);
+        add(okPanel, BorderLayout.SOUTH);
     }
 
     class okListener implements ActionListener
@@ -61,7 +76,7 @@ public class DepositInterface extends JFrame
             if(isValid(amountField.getText()))
             {
                 double depositAmount = Double.valueOf(amountField.getText());
-                if(account instanceof SavingAccount)
+                if(account instanceof SavingAccount)    // check the type of account, for different account has different interest rate
                 {
                     account.deposit(balance, Bank.getSavingAccountDepositInterestRate(), depositAmount);
                 }
@@ -80,6 +95,7 @@ public class DepositInterface extends JFrame
         }
     }
 
+    // check whether the amount is valid
     private boolean isValid(String str)
     {
         String reg = "^[0-9]+(.[0-9]+)?$";

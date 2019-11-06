@@ -5,6 +5,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * interface of transction
+ */
 public class TransferInterface extends JFrame
 {
     private Bank bank;
@@ -12,8 +15,8 @@ public class TransferInterface extends JFrame
     private Balance balance;
     private AccountInterface father;
 
-    private JTextField amountField=new JTextField(4);
-    private JTextField idField=new JTextField(4);
+    private JTextField amountField=new JTextField(20);   // transfer amount
+    private JTextField idField=new JTextField(20);   // target account
 
     TransferInterface(AccountInterface father, Bank bank, Account account, Balance balance)
     {
@@ -23,8 +26,6 @@ public class TransferInterface extends JFrame
         this.balance = balance;
 
         setTitle("Transfer");
-        setSize(500,200);
-        setLayout(new FlowLayout());
         setLocationRelativeTo(null);
         addWindowListener(new WindowAdapter()
         {
@@ -35,25 +36,42 @@ public class TransferInterface extends JFrame
             }
         });
 
-        JLabel amountLabel = new JLabel("Amount");
-        JPanel amountPanel = new JPanel();
-        amountPanel.setLayout(new FlowLayout());
-        amountPanel.add(amountLabel);
-        amountPanel.add(amountField);
+        GridBagLayout gridBag = new GridBagLayout();
+        GridBagConstraints c = null;
 
-        JLabel idLabel = new JLabel("Target ID");
-        JPanel idPanel = new JPanel();
-        idPanel.setLayout(new FlowLayout());
-        idPanel.add(idLabel);
-        idPanel.add(idField);
+        JLabel amountLabel = new JLabel("Amount", JLabel.CENTER);
+
+        JLabel idLabel = new JLabel("Target ID", JLabel.CENTER);
 
         JButton jbtOK = new JButton("OK");
         okListener okL = new okListener();
         jbtOK.addActionListener(okL);
 
-        add(amountPanel);
-        add(idPanel);
-        add(jbtOK);
+        JPanel panel = new JPanel(gridBag);
+
+        c = new GridBagConstraints();
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(amountLabel, c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(amountField, c);
+
+        c = new GridBagConstraints();
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(idLabel, c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(idField, c);
+
+        gridBag.addLayoutComponent(jbtOK, c);
+
+        panel.add(amountLabel);
+        panel.add(amountField);
+        panel.add(idLabel);
+        panel.add(idField);
+        panel.add(jbtOK);
+
+        setContentPane(panel);
+        pack();
+        setResizable(false);
     }
 
     class okListener implements ActionListener

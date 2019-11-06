@@ -1,18 +1,21 @@
+
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * this class represents the whole bank system
+ */
 public class Bank
 {
-    private static double AccountFee = 5;
+    private static double AccountFee = 5;   // the open account fee
     private static double loanInterestRate = 4;
-    private static double savingAccountDepositInterestRate = 1.75;
-    private static double checkingAccountDepositInterestRate = 0;
-    private static double transactionFeeRate = 0.10;
+    private static double savingAccountDepositInterestRate = 1.75;  // interest rate of saving account. When use it, it should multiply with 0.01
+    private static double checkingAccountDepositInterestRate = 0;   // interest rate of checking account. When use it, it should multiply with 0.01
+    private static double transactionFeeRate = 0.10;    // the charge rate of transaction, also a number need multiply with 0.01
     private static double withdrawFeeRate = 0.50;
-    private static List<Transaction> income = new ArrayList<>();
+    private static List<Transaction> income = new ArrayList<>();    // income of this bank
 
-    private List<Manager> managers;
-    private List<Customer> customers;
+    private List<Manager> managers; // managers of this bank
+    private List<Customer> customers;   // customers of this bank
     private List<ATM> atm;
 
     Bank()
@@ -71,8 +74,8 @@ public class Bank
         Name customerName = new Name("Yifei", "Fang");
         Address customerAddress = new Address("457 Park Drive", "Boston", "MA", "02215");
         String customerPhone = "6179389691";
-        String customerID = "ID";
-        String customerPasscode = "PASSCODE";
+        String customerID = "yff";
+        String customerPasscode = "passcode";
         Customer defaultCustomer = new Customer(customerName, customerAddress, customerPhone, customerID, customerPasscode);
         defaultCustomer.initForTest();
         customers.add(defaultCustomer);
@@ -104,7 +107,6 @@ public class Bank
 
     public static void main(String[] args)
     {
-        loaddata();
         Bank bank = new Bank();
         bank.RunATM(0);
     }

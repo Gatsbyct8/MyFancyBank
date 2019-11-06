@@ -5,6 +5,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * registration interface
+ */
 public class RegistrationInterface extends JFrame
 {
     Bank bank;
@@ -12,15 +15,15 @@ public class RegistrationInterface extends JFrame
 
     JFrame father;
 
-    JTextField lastNameField=new JTextField(10);
-    JTextField firstNameField=new JTextField(10);
-    JTextField streetField=new JTextField(10);
-    JTextField cityField=new JTextField(10);
-    JTextField stateField=new JTextField(10);
-    JTextField zipCodeField=new JTextField(10);
-    JTextField phoneField=new JTextField(10);
-    JTextField userIDField=new JTextField(10);
-    JPasswordField passcodeField=new JPasswordField(10);
+    JTextField lastNameField=new JTextField(10);    // input last name
+    JTextField firstNameField=new JTextField(10);   // input first name
+    JTextField streetField=new JTextField(10);     // input street
+    JTextField cityField=new JTextField(10);    // input city
+    JTextField stateField=new JTextField(10);   // input state
+    JTextField zipCodeField=new JTextField(10); // input zip code
+    JTextField phoneField=new JTextField(10);   // input phone number
+    JTextField userIDField=new JTextField(10);  //set a user Id
+    JTextField passcodeField=new JTextField(10);    //set the passcode
     public RegistrationInterface(Bank bank, UserType userType, JFrame father)
     {
         this.bank = bank;
@@ -36,7 +39,7 @@ public class RegistrationInterface extends JFrame
             setTitle("Manager Registration");
         }
 
-        setSize(400,250);
+        //setSize(400,250);
         addWindowListener(new WindowAdapter()
         {
             @Override
@@ -45,64 +48,99 @@ public class RegistrationInterface extends JFrame
                 closeFrame();
             }
         });
-        setLayout(new FlowLayout());
+        //setLayout(new GridLayout(5,2,5,5));
+        GridBagLayout gridBag = new GridBagLayout();
+        GridBagConstraints c = null;
 
-        JPanel lastNamePanel = new JPanel();
-        lastNameField.setText("LastName");
-        lastNamePanel.add(lastNameField);
+        JPanel panel = new JPanel(gridBag);
 
-        JPanel firstNamePanel = new JPanel();
-        firstNameField.setText("FirstName");
-        firstNamePanel.add(firstNameField);
+        JLabel lastNameLabel = new JLabel("Last name", JLabel.LEFT);
+        JLabel firstNameLabel = new JLabel("First name", JLabel.LEFT);
+        JLabel streetLabel = new JLabel("Street", JLabel.LEFT);
+        JLabel cityLabel = new JLabel("City", JLabel.LEFT);
+        JLabel stateLabel = new JLabel("State", JLabel.LEFT);
+        JLabel zipCodeLabel = new JLabel("Zip code", JLabel.LEFT);
+        JLabel phoneLabel = new JLabel("Phone", JLabel.LEFT);
+        JLabel userIDLabel = new JLabel("UserID", JLabel.LEFT);
+        JLabel passcodeLabel = new JLabel("Passcode", JLabel.LEFT);
 
-        JPanel streetPanel = new JPanel();
-        streetField.setText("Street");
-        streetPanel.add(streetField);
-
-        JPanel cityPanel = new JPanel();
-        cityField.setText("City");
-        cityPanel.add(cityField);
-
-        JPanel statePanel = new JPanel();
-        stateField.setText("State");
-        statePanel.add(stateField);
-
-        JPanel zipCodePanel = new JPanel();
-        zipCodeField.setText("ZipCode");
-        zipCodePanel.add(zipCodeField);
-
-        JPanel phonePanel = new JPanel();
-        phoneField.setText("Phone");
-        phonePanel.add(phoneField);
-
-        JPanel userIDPanel = new JPanel();
-        userIDField.setText("UserID");
-        phonePanel.add(userIDField);
-
-        JPanel passcodePanel = new JPanel();
-        passcodeField.setText("Passcode");
-        passcodePanel.add(passcodeField);
-
-        JPanel buttonPanel = new JPanel();
+        Dimension buttonSize = new Dimension(75,25);
         JButton jbtOK = new JButton("OK");
+        jbtOK.setPreferredSize(buttonSize);
         okListener okL = new okListener();
         jbtOK.addActionListener(okL);
         JButton jbtCancel = new JButton("Cancel");
+        jbtCancel.setPreferredSize(buttonSize);
         cancelListener cancelL = new cancelListener();
         jbtCancel.addActionListener(cancelL);
-        buttonPanel.add(jbtOK);
-        buttonPanel.add(jbtCancel);
 
-        add(lastNamePanel);
-        add(firstNamePanel);
-        add(streetPanel);
-        add(cityPanel);
-        add(statePanel);
-        add(zipCodePanel);
-        add(phonePanel);
-        add(userIDPanel);
-        add(passcodePanel);
-        add(buttonPanel);
+        c = new GridBagConstraints();
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(lastNameLabel, c);
+        gridBag.addLayoutComponent(lastNameField, c);
+        gridBag.addLayoutComponent(firstNameLabel, c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(firstNameField, c);
+
+        c = new GridBagConstraints();
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(streetLabel, c);
+        gridBag.addLayoutComponent(streetField, c);
+        gridBag.addLayoutComponent(cityLabel, c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(cityField, c);
+
+        c = new GridBagConstraints();
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(stateLabel, c);
+        gridBag.addLayoutComponent(stateField, c);
+        gridBag.addLayoutComponent(zipCodeLabel, c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(zipCodeField, c);
+
+        c = new GridBagConstraints();
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(phoneLabel, c);
+        gridBag.addLayoutComponent(phoneField, c);
+        gridBag.addLayoutComponent(userIDLabel, c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(userIDField, c);
+
+        c = new GridBagConstraints();
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(passcodeLabel, c);
+        gridBag.addLayoutComponent(passcodeField, c);
+
+        JPanel p = new JPanel();
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(p, c);
+
+        c.gridwidth = 2;
+        gridBag.addLayoutComponent(jbtOK, c);
+        gridBag.addLayoutComponent(jbtCancel, c);
+
+        panel.add(lastNameLabel);
+        panel.add(lastNameField);
+        panel.add(firstNameLabel);
+        panel.add(firstNameField);
+        panel.add(streetLabel);
+        panel.add(streetField);
+        panel.add(cityLabel);
+        panel.add(cityField);
+        panel.add(stateLabel);
+        panel.add(stateField);
+        panel.add(zipCodeLabel);
+        panel.add(zipCodeField);
+        panel.add(passcodeLabel);
+        panel.add(passcodeField);
+        panel.add(p);
+        panel.add(jbtOK);
+        panel.add(jbtCancel);
+
+        setContentPane(panel);
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     private void closeFrame()
@@ -111,6 +149,7 @@ public class RegistrationInterface extends JFrame
         dispose();
     }
 
+    //register a customer
     public boolean regCustomer()
     {
         //Find whether the userID has been used
@@ -131,6 +170,7 @@ public class RegistrationInterface extends JFrame
         return true;
     }
 
+    //register a manager
     public boolean regManager()
     {
         //Find whether the userID has been used
@@ -206,6 +246,7 @@ public class RegistrationInterface extends JFrame
         return id.matches(reg);
     }
 
+    // check whether the name is valid
     private boolean isValidName(String name)
     {
         String reg = "^[a-zA-Z]+$";

@@ -1,3 +1,6 @@
+/**
+ * manager of this bank
+ */
 public class Manager extends Person
 {
     private String passcode;
@@ -10,11 +13,13 @@ public class Manager extends Person
         this.passcode = passcode;
     }
 
+    public String getPasscode()
+    {
+        return passcode;
+    }
+
     public String getManagerID()
     {
         return managerID;
     }
-    public boolean add();
-    public boolean update();
-    public boolean delete();
 }
