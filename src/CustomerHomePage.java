@@ -21,10 +21,9 @@ public class CustomerHomePage extends JFrame
         this.customer = customer;
         this.father = father;
 
-        setTitle("Customer Homepage");
-        setSize(200,150);
-        setResizable(false);
-        setLayout(new GridBagLayout());
+        setTitle("Customer");
+        setSize(300,250);
+        GridBagLayout gridBag = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
         setLocationRelativeTo(null);
         addWindowListener(new WindowAdapter()
@@ -36,25 +35,40 @@ public class CustomerHomePage extends JFrame
             }
         });
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(2,1,5,10));
+        JPanel panel = new JPanel(gridBag);
+
+        Dimension buttonSize = new Dimension(150,25);
         JButton jbtAccounts = new JButton("Accounts");
+        jbtAccounts.setPreferredSize(buttonSize);
         accountsListener accountL = new accountsListener();
         jbtAccounts.addActionListener(accountL);
         JButton jbtLoan = new JButton("Loan");
+        jbtLoan.setPreferredSize(buttonSize);
         loanListener loanL = new loanListener();
         jbtLoan.addActionListener(loanL);
-        buttonPanel.add(jbtAccounts);
-        buttonPanel.add(jbtLoan);
+        JButton jbtStocks = new JButton("Stocks");
+        jbtStocks.setPreferredSize(buttonSize);
+        stocksListener stocksL = new stocksListener();
+        jbtStocks.addActionListener(stocksL);
+
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(jbtAccounts, c);
+        gridBag.addLayoutComponent(jbtLoan, c);
+        gridBag.addLayoutComponent(jbtStocks, c);
+
+        panel.add(jbtAccounts);
+        panel.add(jbtLoan);
+        panel.add(jbtStocks);
 
         Font f = new Font("", Font.BOLD, 16);
         jbtAccounts.setFont(f);
         jbtLoan.setFont(f);
+        jbtStocks.setFont(f);
 
-        c.gridx = 0;
-        c.gridy = 0;
-        c.anchor = GridBagConstraints.CENTER;
-        add(buttonPanel, c);
+        setContentPane(panel);
+        //pack();
+        setResizable(false);
     }
 
     class accountsListener implements ActionListener
@@ -78,6 +92,15 @@ public class CustomerHomePage extends JFrame
             LoanInterface loanInterface = new LoanInterface(self, customer.getAccounts(), customer);
             setVisible(false);
             loanInterface.setVisible(true);
+        }
+    }
+
+    class stocksListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+
         }
     }
 

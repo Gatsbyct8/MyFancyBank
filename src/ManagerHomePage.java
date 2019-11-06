@@ -11,9 +11,9 @@ public class ManagerHomePage extends JFrame
     private Customer selectedCustomer;
     private ManagerHomePage self = this;
 
-    private JComboBox customerList = new JComboBox<String>();
+    private JComboBox customerList = new JComboBox<String>();   // choose a customer to check his transaction
     private DefaultTableModel transactionTableModel = new DefaultTableModel();
-    private JTable transactionTable = new JTable();
+    private JTable transactionTable = new JTable(); // show transaction of a specific customer
 
     ManagerHomePage(Bank bank, LoginInterface father)
     {
@@ -21,7 +21,8 @@ public class ManagerHomePage extends JFrame
         this.father = father;
 
         setTitle("Manger");
-        setSize(900,700);
+        setSize(500,550);
+        setResizable(false);
         setLayout(new FlowLayout());
         setLocationRelativeTo(null);
         addWindowListener(new WindowAdapter()

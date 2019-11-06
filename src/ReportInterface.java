@@ -5,23 +5,27 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * report of transaction and income
+ */
 public class ReportInterface extends JFrame
 {
     Bank bank;
     ManagerHomePage father;
 
     private DefaultTableModel transactionTableModel = new DefaultTableModel();
-    private JTable transactionTable = new JTable();
+    private JTable transactionTable = new JTable(); //transaction history
     private DefaultTableModel incomeTableModel = new DefaultTableModel();
-    private JTable incomeTable = new JTable();
+    private JTable incomeTable = new JTable();  // income report
     ReportInterface(Bank bank, ManagerHomePage father)
     {
         this.bank = bank;
         this.father = father;
 
         setTitle("Manger");
-        setSize(900,700);
-        setLayout(new FlowLayout());
+        setSize(950,700);
+        setResizable(false);
+        setLayout(new BorderLayout());
         setLocationRelativeTo(null);
         addWindowListener(new WindowAdapter()
         {
@@ -50,8 +54,21 @@ public class ReportInterface extends JFrame
         incomeTable.setEnabled(false);
         refreshincomeTable();
 
-        add(transactionScroll);
-        add(incomeScroll);
+        JLabel transactionLabel = new JLabel("Transaction History", JLabel.CENTER);
+        JLabel incomeLabel = new JLabel("Income History", JLabel.CENTER);
+
+        JPanel transactionPanel = new JPanel();
+        transactionPanel.setLayout(new BorderLayout());
+        transactionPanel.add(transactionLabel, BorderLayout.NORTH);
+        transactionPanel.add(transactionScroll, BorderLayout.CENTER);
+
+        JPanel incomePanel = new JPanel();
+        incomePanel.setLayout(new BorderLayout());
+        incomePanel.add(incomeLabel, BorderLayout.NORTH);
+        incomePanel.add(incomeScroll, BorderLayout.CENTER);
+
+        add(transactionPanel, BorderLayout.WEST);
+        add(incomePanel, BorderLayout.EAST);
     }
 
     public void refreshTransactionTable()

@@ -15,15 +15,15 @@ public class HomePage extends JFrame
     {
         this.bank = bank;
 
-        setTitle("Welcome to my bank");
-        setSize(200,150);
+        setTitle("Welcome");
+        setSize(300,150);
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        Dimension buttonSize = new Dimension(150,25);
+        Dimension buttonSize = new Dimension(150,35);
         JButton jbtCustomer = new JButton("Customer");
         jbtCustomer.setPreferredSize(buttonSize);
         CustomerListener customerL = new CustomerListener();
@@ -39,7 +39,7 @@ public class HomePage extends JFrame
         c.gridx = 0;
         c.gridy = 0;
         c.anchor = GridBagConstraints.CENTER;
-        c.insets = new Insets(5,5,5,5);
+        c.insets = new Insets(10,5,10,5);
         add(jbtCustomer, c);
         c.gridx = 0;
         c.gridy = 1;
