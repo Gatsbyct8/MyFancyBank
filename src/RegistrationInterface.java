@@ -39,7 +39,6 @@ public class RegistrationInterface extends JFrame
             setTitle("Manager Registration");
         }
 
-        //setSize(400,250);
         addWindowListener(new WindowAdapter()
         {
             @Override
@@ -48,7 +47,6 @@ public class RegistrationInterface extends JFrame
                 closeFrame();
             }
         });
-        //setLayout(new GridLayout(5,2,5,5));
         GridBagLayout gridBag = new GridBagLayout();
         GridBagConstraints c = null;
 
