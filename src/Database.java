@@ -63,11 +63,11 @@ public class Database {
             String currency=rs.getString("currency");
             Double amount=rs.getDouble("amount");
             for(Customer customer: customers){
-                Currency currency1=Currency.getInstance();
-                Balance balance=new Balance(currency1);
-                balance.setAmount(amount);
+                //Currency currency1=Currency.getInstance();
+                //Balance balance=new Balance(currency1);
+                //balance.setAmount(amount);
                 Account account=new Account();
-                account.
+                //account.
                 if(customer.getUserID().equals(UserID)){
                     customer.getAccounts().add(account);
                 }
