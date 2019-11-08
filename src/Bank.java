@@ -87,8 +87,8 @@ public class Bank
         Name managerName = new Name("Mana", "Ger");
         Address managerAddress = new Address("725 Commonwealth Avenue", "Boston", "MA", "02215");
         String managerPhone = "6173532401";
-        String managerID = "q";
-        String managerPasscode = "1";
+        String managerID = "CAS";
+        String managerPasscode = "123456789";
         Manager defaultManager = new Manager(managerName, managerAddress, managerPhone, managerID, managerPasscode);
         managers.add(defaultManager);
     }
