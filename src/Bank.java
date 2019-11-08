@@ -1,4 +1,5 @@
 
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -13,15 +14,18 @@ public class Bank
     private static double transactionFeeRate = 0.10;    // the charge rate of transaction, also a number need multiply with 0.01
     private static double withdrawFeeRate = 0.50;
     private static List<Transaction> income = new ArrayList<>();    // income of this bank
-
+    
+    
     private List<Manager> managers; // managers of this bank
     private List<Customer> customers;   // customers of this bank
     private List<ATM> atm;
+    private TotalStock totalStock;// this is the collection of stocks in the bank
 
     Bank()
     {
         managers = new ArrayList<>();
         customers = new ArrayList<>();
+        totalStock = new TotalStock();
         atm = new ArrayList<>();
         ATM newATM = new ATM(this);
         atm.add(newATM);
@@ -83,8 +87,8 @@ public class Bank
         Name managerName = new Name("Mana", "Ger");
         Address managerAddress = new Address("725 Commonwealth Avenue", "Boston", "MA", "02215");
         String managerPhone = "6173532401";
-        String managerID = "CAS";
-        String managerPasscode = "123456789";
+        String managerID = "q";
+        String managerPasscode = "1";
         Manager defaultManager = new Manager(managerName, managerAddress, managerPhone, managerID, managerPasscode);
         managers.add(defaultManager);
     }
@@ -98,6 +102,15 @@ public class Bank
     {
         return managers;
     }
+    
+	public List<Stock> getStocks() {
+		return totalStock.getStockList();
+	}
+	
+	public TotalStock getTotalStock() {
+		return totalStock;
+	}
+
 
     public void RunATM(int index)
     {
@@ -110,4 +123,7 @@ public class Bank
         Bank bank = new Bank();
         bank.RunATM(0);
     }
+
+
+
 }
