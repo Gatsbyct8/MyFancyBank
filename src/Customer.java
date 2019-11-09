@@ -11,6 +11,7 @@ public class Customer extends Person
     private String passcode;
     private List<Account> Accounts;
     private List<Loan> loans;   // loans of this customer
+    private List<SelfStock> selfStocks; //Stocks purchased by the customer
 
     Customer(Name name, Address address, String phoneNumber, String UserID, String passcode)
     {

@@ -1,9 +1,9 @@
 public class SelfStock {
-    Stock a;
+    Stock stock;
     int buyprice;
     int amount;
     String getid(){
-        return a.id;
+        return stock.id;
     }
 
 }

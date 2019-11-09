@@ -100,7 +100,9 @@ public class CustomerHomePage extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-
+            CustomerStockInterface customerStockInterface = new CustomerStockInterface(customer, bank, self);
+            setVisible(false);
+            customerStockInterface.setVisible(true);
         }
     }
 
