@@ -15,4 +15,12 @@ public class Name
         String totalName = firstName + lastName;
         return totalName;
     }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
 }
