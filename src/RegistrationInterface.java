@@ -129,6 +129,10 @@ public class RegistrationInterface extends JFrame
         panel.add(stateField);
         panel.add(zipCodeLabel);
         panel.add(zipCodeField);
+        panel.add(phoneLabel);
+        panel.add(phoneField);
+        panel.add(userIDLabel);
+        panel.add(userIDField);
         panel.add(passcodeLabel);
         panel.add(passcodeField);
         panel.add(p);

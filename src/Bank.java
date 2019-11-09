@@ -74,8 +74,8 @@ public class Bank
         Name customerName = new Name("Yifei", "Fang");
         Address customerAddress = new Address("457 Park Drive", "Boston", "MA", "02215");
         String customerPhone = "6179389691";
-        String customerID = "yff";
-        String customerPasscode = "passcode";
+        String customerID = "ID";
+        String customerPasscode = "PASSCODE";
         Customer defaultCustomer = new Customer(customerName, customerAddress, customerPhone, customerID, customerPasscode);
         defaultCustomer.initForTest();
         customers.add(defaultCustomer);

@@ -9,8 +9,8 @@ public class AccountInterface extends JFrame
 {
     Bank bank;
     private List<Account> accounts;
-    private MoneyAccount currentMoneyAccount;
-    private Balance currentBalance;
+    private MoneyAccount currentMoneyAccount = null;
+    private Balance currentBalance = null;
     private CustomerHomePage father;
     private AccountInterface self = this;
 
@@ -40,8 +40,10 @@ public class AccountInterface extends JFrame
             }
         });
 
+        //Dimension JComboBoxSize = new Dimension(100,20);
         accountList.setEditable(false);
         accountList.setEnabled(true);
+        accountList.setPreferredSize(new Dimension(175,20));
         accountListListener accountListL = new accountListListener();
         accountList.addItemListener(accountListL);
         for(Account item : accounts)    // add accounts into the accountList
@@ -58,9 +60,14 @@ public class AccountInterface extends JFrame
                 accountList.addItem(checkingAccount.toString());
             }
         }
+        if(currentMoneyAccount == null)
+        {
+            jbtTransfer.setEnabled(false);
+        }
 
         balanceList.setEditable(false);
         balanceList.setEnabled(true);
+        balanceList.setPreferredSize(new Dimension(50,20));
         balanceListListener balanceListL = new balanceListListener();
         balanceList.addItemListener(balanceListL);
 
@@ -152,7 +159,7 @@ public class AccountInterface extends JFrame
                     }
                 }
 
-                if(currentMoneyAccount instanceof SavingAccount)
+                if((currentMoneyAccount instanceof SavingAccount) || (currentMoneyAccount == null))
                 {
                     jbtTransfer.setEnabled(false);
                 }
@@ -198,9 +205,16 @@ public class AccountInterface extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
+            if(currentMoneyAccount == null)
+            {
+                MessageDialog errorMessage = new MessageDialog("Error", "Please select an account!");
+                errorMessage.setVisible(true);
+                return;
+            }
             DepositInterface depositInterface = new DepositInterface(self, currentMoneyAccount, currentBalance);
             setEnabled(false);
             depositInterface.setVisible(true);
+
         }
     }
 
@@ -209,6 +223,12 @@ public class AccountInterface extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
+            if(currentMoneyAccount == null)
+            {
+                MessageDialog errorMessage = new MessageDialog("Error", "Please select an account!");
+                errorMessage.setVisible(true);
+                return;
+            }
             WithdrawInterface withdrawInterface = new WithdrawInterface(self, currentMoneyAccount, currentBalance);
             setEnabled(false);
             withdrawInterface.setVisible(true);
