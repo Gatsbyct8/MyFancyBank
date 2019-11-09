@@ -4,7 +4,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 
@@ -192,11 +192,11 @@ public class LoanInterface extends JFrame
                 return;
             }
             double amount = Double.valueOf(amountField.getText());
-            Loan newLoan = new Loan(new Date(), amount, collateral, Loan.getMAXID());
+            Loan newLoan = new Loan(new Date(System.currentTimeMillis()), amount, collateral, Loan.getMAXID());
             Loan.maxIDIncrease();
             customer.addLoan(newLoan);
 
-            Transaction loanTransaction = new Transaction(new Date(), amount, "Loan");
+            Transaction loanTransaction = new Transaction(new Date(System.currentTimeMillis()), amount, "Loan");
             Balance targetBalance = null;
             for(Balance item : targetAccount.getBalance())
             {
