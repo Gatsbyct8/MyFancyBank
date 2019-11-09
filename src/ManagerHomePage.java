@@ -21,9 +21,6 @@ public class ManagerHomePage extends JFrame
         this.father = father;
 
         setTitle("Manger");
-        setSize(500,550);
-        setResizable(false);
-        setLayout(new FlowLayout());
         setLocationRelativeTo(null);
         addWindowListener(new WindowAdapter()
         {
@@ -65,9 +62,31 @@ public class ManagerHomePage extends JFrame
         reportListener reportL = new reportListener();
         jbtReport.addActionListener(reportL);
 
-        add(customerList);
-        add(transactionScroll);
-        add(jbtReport);
+        JButton jbtManageStocks = new JButton("Manage Stocks");
+        manageStocksListener manageStocksL = new manageStocksListener();
+        jbtManageStocks.addActionListener(manageStocksL);
+
+        GridBagLayout gridBag = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
+
+        JPanel panel = new JPanel(gridBag);
+
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(customerList, c);
+        gridBag.addLayoutComponent(transactionScroll, c);
+        gridBag.addLayoutComponent(jbtReport, c);
+        gridBag.addLayoutComponent(jbtManageStocks, c);
+
+        panel.add(customerList);
+        panel.add(transactionScroll);
+        panel.add(jbtReport);
+        panel.add(jbtManageStocks);
+
+        setContentPane(panel);
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     class customerListListener implements ItemListener
@@ -105,6 +124,17 @@ public class ManagerHomePage extends JFrame
             ReportInterface reportInterface = new ReportInterface(bank, self);
             setVisible(false);
             reportInterface.setVisible(true);
+        }
+    }
+
+    class manageStocksListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            ManageStocksInterface manageStocksInterface = new ManageStocksInterface(bank, self);
+            setVisible(false);
+            manageStocksInterface.setVisible(true);
         }
     }
 
