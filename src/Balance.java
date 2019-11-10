@@ -1,4 +1,8 @@
-import java.util.*;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Currency;
+import java.util.List;
+import java.util.Locale;
 
 public class Balance
 {
@@ -56,9 +60,9 @@ public class Balance
     {
         amount = 100;
 
-        Transaction newTransaction = new Transaction(new Date(), 5, "Deposit");
+        Transaction newTransaction = new Transaction(new Date(System.currentTimeMillis()), 5, "Deposit");
         transactions.add(newTransaction);
-        newTransaction = new Transaction(new Date(), -5, "Open account");
+        newTransaction = new Transaction(new Date(System.currentTimeMillis()), -5, "Open account");
         transactions.add(newTransaction);
     }
 

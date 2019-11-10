@@ -1,5 +1,5 @@
 import java.util.Currency;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Locale;
 
 
@@ -34,12 +34,12 @@ public class CheckingAccount extends MoneyAccount
         double balanceAmount = balance.getAmount();
         if((amount + withdrawFee) <= balanceAmount)
         {
-            Transaction newWithdraw = new Transaction(new Date(), -amount, "Withdraw");
+            Transaction newWithdraw = new Transaction(new Date(System.currentTimeMillis()), -amount, "Withdraw");
             balance.addNewTransaction(newWithdraw);
-            Transaction newWithdrawFee = new Transaction(new Date(), -withdrawFee, "Withdraw fee");
+            Transaction newWithdrawFee = new Transaction(new Date(System.currentTimeMillis()), -withdrawFee, "Withdraw fee");
             balance.addNewTransaction(newWithdrawFee);
 
-            Transaction fee = new Transaction(new Date(), withdrawFee, accountID);
+            Transaction fee = new Transaction(new Date(System.currentTimeMillis()), withdrawFee, accountID);
             fee.setReason("Withdraw fee");
             Bank.addIncome(fee);
             return true;
@@ -55,7 +55,7 @@ public class CheckingAccount extends MoneyAccount
         calculateCurrentInterest(balance, Bank.getCheckingAccountDepositInterestRate());
         if(amount <= balance.getAmount())
         {
-            Transaction newTransaction = new Transaction(new Date(), -amount, targetAccount.getAccountID());
+            Transaction newTransaction = new Transaction(new Date(System.currentTimeMillis()), -amount, targetAccount.getAccountID());
             balance.addNewTransaction(newTransaction);
             return true;
         }

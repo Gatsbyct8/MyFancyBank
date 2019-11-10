@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * Choose use this system as manager or customer
@@ -80,6 +82,8 @@ public class HomePage extends JFrame
     private void closeFrame()
     {
         //add your code here
+        Database database=new Database();
+        database.record(bank);
         dispose(); //dispose the frame and exit the program
     }
 }

@@ -83,7 +83,7 @@ public class Database {
     }
 
     private void loadtransaction(int s,int num, Balance balance) throws Exception{
-        String sql="SELECT * FROM transcation LIMIT "+s+", "+num;
+        String sql="SELECT * FROM transaction LIMIT "+s+", "+num;
         Class.forName(JDBC_DRIVER);
         conn = DriverManager.getConnection(DB_URL,USER,PASS);
         stmt = conn.createStatement();
@@ -206,13 +206,14 @@ public class Database {
     }
     public void record(Bank bank){
         try{
-            String sql="insert into user";
+            deletetable();
+            String sql="insert into user values (?,?,?,?,?,?,?,?,?)";
             recorduser(sql,bank);
-            sql="insert into account";
+            sql="insert into account values (?,?,?,?,?,?)";
             recordaccount(sql,bank);
-            sql="insert into loan";
+            sql="insert into loan values (?,?,?,?,?)";
             recordloan(sql,bank);
-            sql="insert into transaction";
+            sql="insert into transaction(UserID,accountID,date,amount,sourceNtargetID,reason) values (?,?,?,?,?,?)";
             recordtransaction(sql,bank);
         }catch(SQLException se){
             // 处理 JDBC 错误
@@ -232,6 +233,18 @@ public class Database {
                 se.printStackTrace();
             }
         }
+    }
+
+    private void deletetable() throws Exception{
+        String sql[]={"Truncate Table user","Truncate Table account","Truncate Table loan","Truncate Table transaction "};
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL,USER,PASS);
+        stmt = conn.createStatement();
+        for(String s:sql) {
+            stmt.executeUpdate(s);
+        }
+        stmt.close();
+        conn.close();
     }
 
     private void recorduser(String sql, Bank bank) throws Exception {
