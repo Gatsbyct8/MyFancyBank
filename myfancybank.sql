@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50718
 File Encoding         : 65001
 
-Date: 2019-11-06 17:52:46
+Date: 2019-11-10 10:52:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,30 +20,36 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
-  `UserID` varchar(255) NOT NULL,
-  `accountID` varchar(255) DEFAULT NULL,
+  `UserID` varchar(255) DEFAULT NULL,
+  `accountID` varchar(255) NOT NULL,
   `accountType` varchar(255) DEFAULT NULL,
-  `currency` varchar(255) DEFAULT NULL,
+  `currency` varchar(255) NOT NULL,
   `amount` double DEFAULT NULL,
-  PRIMARY KEY (`UserID`)
+  `transactionNum` int(11) DEFAULT NULL,
+  PRIMARY KEY (`accountID`,`currency`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of account
 -- ----------------------------
+INSERT INTO `account` VALUES ('yff', '0001', 'saving', 'CNY', '0', '0');
+INSERT INTO `account` VALUES ('yff', '0001', 'saving', 'EUR', '0', '0');
+INSERT INTO `account` VALUES ('yff', '0001', 'saving', 'USD', '100', '2');
+INSERT INTO `account` VALUES ('yff', '0002', 'checking', 'CNY', '0', '0');
+INSERT INTO `account` VALUES ('yff', '0002', 'checking', 'EUR', '0', '0');
+INSERT INTO `account` VALUES ('yff', '0002', 'checking', 'USD', '100', '2');
 
 -- ----------------------------
 -- Table structure for `loan`
 -- ----------------------------
 DROP TABLE IF EXISTS `loan`;
 CREATE TABLE `loan` (
-  `UserID` varchar(255) NOT NULL,
-  `currency` varchar(255) DEFAULT NULL,
+  `UserID` varchar(255) DEFAULT NULL,
   `amount` double DEFAULT NULL,
-  `id` varchar(255) DEFAULT NULL,
+  `id` varchar(255) NOT NULL,
   `CollateralType` varchar(255) DEFAULT NULL,
   `Date` date DEFAULT NULL,
-  PRIMARY KEY (`UserID`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -105,22 +111,27 @@ CREATE TABLE `stock` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `transcation`
+-- Table structure for `transaction`
 -- ----------------------------
-DROP TABLE IF EXISTS `transcation`;
-CREATE TABLE `transcation` (
+DROP TABLE IF EXISTS `transaction`;
+CREATE TABLE `transaction` (
   `UserID` varchar(255) DEFAULT NULL,
   `accountID` varchar(255) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `amount` double DEFAULT NULL,
-  `sourceNtargetID` varchar(255) NOT NULL,
+  `sourceNtargetID` varchar(255) DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`sourceNtargetID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of transcation
+-- Records of transaction
 -- ----------------------------
+INSERT INTO `transaction` VALUES ('yff', '0001', '2019-11-10', '5', 'Deposit', null, '1');
+INSERT INTO `transaction` VALUES ('yff', '0001', '2019-11-10', '-5', 'Open account', null, '2');
+INSERT INTO `transaction` VALUES ('yff', '0002', '2019-11-10', '5', 'Deposit', null, '3');
+INSERT INTO `transaction` VALUES ('yff', '0002', '2019-11-10', '-5', 'Open account', null, '4');
 
 -- ----------------------------
 -- Table structure for `user`
@@ -142,3 +153,4 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
+INSERT INTO `user` VALUES ('yff', 'passcode', 'Fang', 'Yifei', '6179389691', '457 Park Drive', 'Boston', 'MA', '02215');
