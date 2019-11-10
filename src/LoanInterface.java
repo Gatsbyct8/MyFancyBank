@@ -32,9 +32,6 @@ public class LoanInterface extends JFrame
         this.customer = customer;
 
         setTitle("Loan");
-        setSize(500,700);
-        setLayout(new FlowLayout());
-        setLocationRelativeTo(null);
         addWindowListener(new WindowAdapter()
         {
             @Override
@@ -44,6 +41,9 @@ public class LoanInterface extends JFrame
             }
         });
 
+        JLabel amountLabel = new JLabel("Amount");
+
+        JLabel accountLabel = new JLabel("Account");
         accountList.setEditable(false);
         accountList.setEnabled(true);
         accountListListener accountListL = new accountListListener();
@@ -62,15 +62,22 @@ public class LoanInterface extends JFrame
                 accountList.addItem(checkingAccount.toString());
             }
         }
+        JPanel accountPanel = new JPanel(new FlowLayout());
+        accountPanel.add(accountLabel);
+        accountPanel.add(accountList);
 
+        JLabel collateralLabel = new JLabel("Collateral");
         collateralList.setEditable(false);
         collateralList.setEnabled(true);
-        collteralListListener collteralListL = new collteralListListener();
-        collateralList.addItemListener(collteralListL);
+        collteralListListener collateralListL = new collteralListListener();
+        collateralList.addItemListener(collateralListL);
         for(CollateralType item : CollateralType.values())
         {
             collateralList.addItem(item.toString());
         }
+        JPanel collateralPanel = new JPanel(new FlowLayout());
+        collateralPanel.add(collateralLabel);
+        collateralPanel.add(collateralList);
 
         JButton jbtLoan = new JButton("Loan");
         loanListener okL = new loanListener();
@@ -86,6 +93,7 @@ public class LoanInterface extends JFrame
         jbtRepay.setEnabled(false);
         refreshLoanTable();
 
+        JLabel repayAccountLabel = new JLabel("Repay Account");
         repayAccountList.setEditable(false);
         repayAccountList.setEnabled(true);
         repayAccountListListener repayAccountListL = new repayAccountListListener();
@@ -104,17 +112,49 @@ public class LoanInterface extends JFrame
                 repayAccountList.addItem(checkingAccount.toString());
             }
         }
+        JPanel repayAccountPanel = new JPanel(new FlowLayout());
+        repayAccountPanel.add(repayAccountLabel);
+        repayAccountPanel.add(repayAccountList);
 
         repayListener repayL = new repayListener();
         jbtRepay.addActionListener(repayL);
 
-        add(amountField);
-        add(accountList);
-        add(collateralList);
-        add(jbtLoan);
-        add(loanScroll);
-        add(repayAccountList);
-        add(jbtRepay);
+        Dimension buttonSize = new Dimension(100,30);
+        Font f = new Font("", Font.BOLD, 15);
+        jbtLoan.setPreferredSize(buttonSize);
+        jbtLoan.setFont(f);
+        jbtRepay.setPreferredSize(buttonSize);
+        jbtRepay.setFont(f);
+
+        GridBagLayout gridBag = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
+        JPanel panel = new JPanel(gridBag);
+
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(amountLabel, c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(amountField, c);
+        c = new GridBagConstraints();
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(accountPanel, c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(collateralPanel, c);
+        gridBag.addLayoutComponent(jbtLoan, c);
+        gridBag.addLayoutComponent(loanScroll, c);
+        gridBag.addLayoutComponent(repayAccountPanel, c);
+        gridBag.addLayoutComponent(jbtRepay, c);
+
+        panel.add(accountPanel);
+        panel.add(collateralPanel);
+        panel.add(jbtLoan);
+        panel.add(loanScroll);
+        panel.add(repayAccountPanel);
+        panel.add(jbtRepay);
+
+        setContentPane(panel);
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     class collteralListListener implements ItemListener

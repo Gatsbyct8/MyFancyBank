@@ -14,7 +14,9 @@ public class AccountInterface extends JFrame
     private CustomerHomePage father;
     private AccountInterface self = this;
 
+    private JLabel accountLabel = new JLabel("Account");
     private JComboBox accountList = new JComboBox<String>();
+    private JLabel balanceLabel = new JLabel("Balance");
     private JComboBox balanceList = new JComboBox<String>();
     private JLabel balanceAmount = new JLabel();
     private DefaultTableModel transactionTableModel = new DefaultTableModel();
@@ -28,9 +30,6 @@ public class AccountInterface extends JFrame
         this.father = father;
 
         setTitle("Accounts");
-        setSize(500,700);
-        setLayout(new FlowLayout());
-        setLocationRelativeTo(null);
         addWindowListener(new WindowAdapter()
         {
             @Override
@@ -67,10 +66,12 @@ public class AccountInterface extends JFrame
 
         balanceList.setEditable(false);
         balanceList.setEnabled(true);
-        balanceList.setPreferredSize(new Dimension(50,20));
+        balanceList.setPreferredSize(new Dimension(75,20));
         balanceListListener balanceListL = new balanceListListener();
         balanceList.addItemListener(balanceListL);
 
+        Font f = new Font("", Font.BOLD, 16);
+        balanceAmount.setFont(f);
         balanceAmount.setText("0.00");
 
         JTableHeader transactionHeader = transactionTable.getTableHeader();
@@ -82,30 +83,63 @@ public class AccountInterface extends JFrame
         transactionTable.setEnabled(false);
         refreshTransactionTable();
 
+        Dimension buttonSize = new Dimension(100,25);
         JButton jbtDiposit = new JButton("Deposit");
+        jbtDiposit.setPreferredSize(buttonSize);
         depositListener depositL = new depositListener();
         jbtDiposit.addActionListener(depositL);
-
         JButton jbtWithdraw = new JButton("Withdraw");
+        jbtWithdraw.setPreferredSize(buttonSize);
         withdrawListener withdrawL = new withdrawListener();
         jbtWithdraw.addActionListener(withdrawL);
-
-
+        jbtTransfer.setPreferredSize(buttonSize);
         transferListener transferL = new transferListener();
         jbtTransfer.addActionListener(transferL);
-
         JButton jbtopenAccount = new JButton("Open New Account");
+        jbtopenAccount.setPreferredSize(new Dimension(150, 25));
         openNewAccountListener openNewAccountL = new openNewAccountListener();
         jbtopenAccount.addActionListener(openNewAccountL);
 
-        add(accountList);
-        add(balanceList);
-        add(balanceAmount);
-        add(transactionScroll);
-        add(jbtDiposit);
-        add(jbtWithdraw);
-        add(jbtTransfer);
-        add(jbtopenAccount);
+        JPanel amountPanel = new JPanel(new FlowLayout());
+        amountPanel.add(accountLabel);
+        amountPanel.add(accountList);
+        JPanel balancePanel = new JPanel(new FlowLayout());
+        balancePanel.add(balanceLabel);
+        balancePanel.add(balanceList);
+
+        JPanel moneyButtonPanel = new JPanel(new FlowLayout());
+        moneyButtonPanel.add(jbtDiposit);
+        moneyButtonPanel.add(jbtWithdraw);
+        moneyButtonPanel.add(jbtTransfer);
+
+        GridBagLayout gridBag = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
+        JPanel panel = new JPanel(gridBag);
+
+        c.insets = new Insets(10,5,10,5);
+        c.gridwidth = GridBagConstraints.RELATIVE;
+        gridBag.addLayoutComponent(amountPanel, c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(balancePanel, c);
+        gridBag.addLayoutComponent(balanceAmount, c);
+        gridBag.addLayoutComponent(transactionScroll, c);
+        c = new GridBagConstraints();
+        c.insets = new Insets(10,5,10,5);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(moneyButtonPanel, c);
+        gridBag.addLayoutComponent(jbtopenAccount, c);
+
+        panel.add(amountPanel);
+        panel.add(balancePanel);
+        panel.add(balanceAmount);
+        panel.add(transactionScroll);
+        panel.add(moneyButtonPanel);
+        panel.add(jbtopenAccount);
+
+        setContentPane(panel);
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     public void initAccountList()
