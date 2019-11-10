@@ -43,6 +43,13 @@ public class StocksInfoInterface extends JFrame
         CancelListener CancelL = new CancelListener();
         jbtCancel.addActionListener(CancelL);
 
+        if(type.equals(ManageStocksType.MODIFY))
+        {
+            idField.setEditable(false);
+            nameField.setEditable(false);
+            numberField.setEditable(false);
+        }
+
         GridBagLayout gridBag = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
         JPanel panel = new JPanel(gridBag);
