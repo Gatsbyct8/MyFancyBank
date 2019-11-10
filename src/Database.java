@@ -119,12 +119,13 @@ public class Database {
         conn = DriverManager.getConnection(DB_URL,USER,PASS);
         stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
-        String UserID = rs.getString("UserID");
-        String accountID = rs.getString("accountID");
-        String accountType = rs.getString("accountType");
-        String currency = rs.getString("currency");
-        Double amount = rs.getDouble("amount");
-        int transactionNum = rs.getInt("transactionNum");
+        rs.beforeFirst();
+        String UserID;
+        String accountID;
+        String accountType;
+        String currency;
+        Double amount;
+        int transactionNum;
         while(rs.next()) {
             UserID = rs.getString("UserID");
             accountID = rs.getString("accountID");
@@ -133,10 +134,19 @@ public class Database {
             amount = rs.getDouble("amount");
             transactionNum = rs.getInt("transactionNum");
             for (Customer customer : customers) {
-                Account account = createNewAccount(accountID, accountType);
-                if (customer.getUserID().equals(UserID)) {
-                    customer.getAccounts().add(account);
-                }
+                    if (customer.getUserID().equals(UserID)) {
+                        boolean flag=true;
+                        for(Account A:customer.getAccounts()) {
+                            if (A.accountID.equals(accountID)) {
+                                flag=false;
+                                break;
+                            }
+                        }
+                        if(flag){
+                            Account account = createNewAccount(accountID, accountType);
+                            customer.getAccounts().add(account);
+                        }
+                    }
             }
         }
         rs.beforeFirst();
