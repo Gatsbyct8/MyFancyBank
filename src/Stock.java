@@ -1,6 +1,6 @@
 public class Stock {
-    protected String id;
-    protected String name;
+    private String id;
+	private String name;
     private int number;
     protected double currentPrice;//this is in USD
 	

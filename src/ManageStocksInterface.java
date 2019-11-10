@@ -40,9 +40,10 @@ public class ManageStocksInterface extends JFrame
         JTableHeader stocksHeader = stocksTable.getTableHeader();
         stocksHeader.setResizingAllowed(true);
         JScrollPane stocksScroll = new JScrollPane(stocksTable);
-        String[] stocksHeaderName = {"ID", "Name", "Price"};
+        String[] stocksHeaderName = {"ID", "Name", "Number", "Price"};
         stocksTableModel.setColumnIdentifiers(stocksHeaderName);
         stocksTable.setModel(stocksTableModel);
+        stocksTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         stocksTable.setEnabled(false);
         refreshStocksTable();
 
@@ -90,7 +91,8 @@ public class ManageStocksInterface extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            StocksInfoInterface stocksInfoInterface = new StocksInfoInterface(self, ManageStocksType.ADD);
+            StocksInfoInterface stocksInfoInterface = new StocksInfoInterface(bank, self, ManageStocksType.ADD);
+            refreshStocksTable();
             setVisible(false);
             stocksInfoInterface.setVisible(true);
         }
@@ -101,7 +103,16 @@ public class ManageStocksInterface extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
+            Stock selectedStock = getSelectStock();
 
+            if(selectedStock!=null && bank.getTotalStock().delete(selectedStock)) {
+                MessageDialog deleteSuccess = new MessageDialog("Success", "Stock deleted.");
+                deleteSuccess.setVisible(true);
+                refreshStocksTable();
+                return;
+            }
+
+            return;
         }
     }
 
@@ -110,7 +121,7 @@ public class ManageStocksInterface extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            StocksInfoInterface stocksInfoInterface = new StocksInfoInterface(self, ManageStocksType.MODIFY);
+            StocksInfoInterface stocksInfoInterface = new StocksInfoInterface(bank, self, ManageStocksType.MODIFY);
             setVisible(false);
             stocksInfoInterface.setVisible(true);
         }
@@ -125,9 +136,46 @@ public class ManageStocksInterface extends JFrame
         }
     }
 
-    private void refreshStocksTable()
+    private Stock getSelectStock()
     {
+        Stock selectedStock = null;
+        int index = stocksTable.getSelectedRow();
+        if(index == -1)
+        {
+            MessageDialog amountError = new MessageDialog("Error", "Please select a loan!");
+            amountError.setVisible(true);
+            return null;
+        }
+        String stockID = (String)stocksTable.getValueAt(index, 1);
 
+        for(Stock item : bank.getStocks())
+        {
+            if(item.getId().equals(stockID))
+            {
+                selectedStock = item;
+                return selectedStock;
+            }
+        }
+        MessageDialog amountError = new MessageDialog("Error", "Cannot find the stock!");
+        amountError.setVisible(true);
+        return selectedStock;
+    }
+
+    public void refreshStocksTable()
+    {
+        if(bank.getStocks().isEmpty())
+        {
+            return;
+        }
+        stocksTableModel.setRowCount(0);
+        for(Stock item : bank.getStocks())
+        {
+            String id = item.getId();
+            String name = item.getName();
+            String number = String.valueOf(item.getNumber());
+            String price = String.format(" %.2f", item.getPrice());
+            stocksTableModel.addRow(new String[]{id, name, number, price});
+        }
     }
 
     public void closeFrame()

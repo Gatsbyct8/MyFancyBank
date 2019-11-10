@@ -7,6 +7,7 @@ import java.awt.event.WindowEvent;
 
 public class StocksInfoInterface extends JFrame
 {
+    Bank bank;
     ManageStocksInterface father;
     StocksInfoInterface self = this;
     ManageStocksType type;
@@ -20,8 +21,9 @@ public class StocksInfoInterface extends JFrame
     JLabel priceLabel = new JLabel("Price");
     JTextField priceField = new JTextField(10);
 
-    StocksInfoInterface(ManageStocksInterface father, ManageStocksType type)
+    StocksInfoInterface(Bank bank, ManageStocksInterface father, ManageStocksType type)
     {
+        this.bank = bank;
         this.father = father;
         this.type = type;
 
@@ -97,7 +99,71 @@ public class StocksInfoInterface extends JFrame
         {
             if(type.equals(ManageStocksType.ADD))   // Add new stocks
             {
+                int numOfShares;
+                double valueOfStock;
 
+                if(nameField.getText().isEmpty() || nameField.getText().equals(""))
+                {
+                    MessageDialog amountError = new MessageDialog("Error", "Your stock must have a name!");
+                    amountError.setVisible(true);
+                    return;
+                }
+                idField.setText(idField.getText().toUpperCase());
+                if (!isValidID(idField.getText()))
+                {
+                    MessageDialog amountError = new MessageDialog("Error", "Invalid ID! (must be all caps, 6 letters or less)");
+                    amountError.setVisible(true);
+                    return;
+                }
+
+                try //number of stocks must not be negative
+                {
+                    numOfShares = Integer.parseInt(numberField.getText());
+                    if (numOfShares < 0)
+                    {
+                        MessageDialog amountError = new MessageDialog("Error", "Number of shares must not be negative!");
+                        amountError.setVisible(true);
+                        return;
+                    }
+                }
+                catch(NumberFormatException nfe)
+                {
+                    MessageDialog amountError = new MessageDialog("Error", "Number of shares must be an integer!");
+                    amountError.setVisible(true);
+                    return;
+                }
+
+                try //price of stocks must not be negative
+                {
+                    valueOfStock = Double.parseDouble(priceField.getText());
+                    if (valueOfStock < 0)
+                    {
+                        MessageDialog amountError = new MessageDialog("Error", "Price of stock must not be negative!");
+                        amountError.setVisible(true);
+                        return;
+                    }
+                }
+                catch(NumberFormatException nfe)
+                {
+                    MessageDialog amountError = new MessageDialog("Error", "Price of stock must be a number!");
+                    amountError.setVisible(true);
+                    return;
+                }
+                catch(NullPointerException npe) {
+                    MessageDialog amountError = new MessageDialog("Error", "Price of stock must be a number!");
+                    amountError.setVisible(true);
+                    return;
+                }
+
+                //validation passed, create stock
+                if(addStock())//this will fail if the id is already in use
+                {
+                    closeFrame();
+                    return;
+                }
+
+                MessageDialog message = new MessageDialog("Error", "This ID has already been used!");
+                message.setVisible(true);
             }
             if(type.equals(ManageStocksType.MODIFY))    // Modify stock information
             {
@@ -115,8 +181,21 @@ public class StocksInfoInterface extends JFrame
         }
     }
 
+    public boolean addStock()
+    {
+        Stock newStock = new Stock (idField.getText(), nameField.getText(), Integer.valueOf(numberField.getText()), Double.valueOf(priceField.getText()));
+        return bank.getTotalStock().add(newStock);
+    }
+
+    private boolean isValidID(String id)
+    {
+        String reg = "^[A-Z]{1,6}$";
+        return id.matches(reg);
+    }
+
     private void closeFrame()
     {
+        father.refreshStocksTable();
         father.setVisible(true);
         dispose();
     }
