@@ -15,10 +15,11 @@ public class ManageStocksInterface extends JFrame
     private ManagerHomePage father;
     private ManageStocksInterface self = this;
 
-    private TableModel stocksTableModel = new TableModel();
+    private StockTableModel stocksTableModel = new StockTableModel();
     private JTable stocksTable = new JTable();
     private JButton jbtAdd = new JButton("Add");
     private JButton jbtDelete = new JButton("Delete");
+    private JButton jbtRestore = new JButton("Restore");
     private JButton jbtModify = new JButton("Modify");
 
     ManageStocksInterface(Bank bank, ManagerHomePage father)
@@ -44,15 +45,21 @@ public class ManageStocksInterface extends JFrame
         stocksTableModel.setColumnIdentifiers(stocksHeaderName);
         stocksTable.setModel(stocksTableModel);
         stocksTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        stocksTable.setEnabled(false);
         refreshStocksTable();
 
+        Dimension buttonSize = new Dimension(90,25);
         AddListener addL = new AddListener();
         jbtAdd.addActionListener(addL);
+        jbtAdd.setPreferredSize(buttonSize);
         DeleteListener deleteL = new DeleteListener();
         jbtDelete.addActionListener(deleteL);
+        jbtDelete.setPreferredSize(buttonSize);
+        RestoreListener restoreL = new RestoreListener();
+        jbtRestore.addActionListener(restoreL);
+        jbtRestore.setPreferredSize(buttonSize);
         ModifyListener modifyL = new ModifyListener();
         jbtModify.addActionListener(modifyL);
+        jbtModify.setPreferredSize(buttonSize);
 
         GridBagLayout jbtGridBag = new GridBagLayout();
         GridBagConstraints jbtC = new GridBagConstraints();
@@ -62,9 +69,11 @@ public class ManageStocksInterface extends JFrame
         jbtC.anchor = GridBagConstraints.CENTER;
         jbtGridBag.addLayoutComponent(jbtAdd, jbtC);
         jbtGridBag.addLayoutComponent(jbtDelete, jbtC);
+        jbtGridBag.addLayoutComponent(jbtRestore, jbtC);
         jbtGridBag.addLayoutComponent(jbtModify, jbtC);
         jbtPanel.add(jbtAdd);
         jbtPanel.add(jbtDelete);
+        jbtPanel.add(jbtRestore);
         jbtPanel.add(jbtModify);
 
         GridBagLayout gridBag = new GridBagLayout();
@@ -116,6 +125,23 @@ public class ManageStocksInterface extends JFrame
         }
     }
 
+    class RestoreListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            if(bank.getTotalStock().restoreStock()) {
+                MessageDialog restoreSuccess = new MessageDialog("Success", "Stock restored.");
+                restoreSuccess.setVisible(true);
+                refreshStocksTable();
+                return;
+            }
+            MessageDialog restoreError = new MessageDialog("Error", "No stocks have been deleted.");
+            restoreError.setVisible(true);
+            return;
+        }
+    }
+
     class ModifyListener implements ActionListener
     {
         @Override
@@ -127,7 +153,7 @@ public class ManageStocksInterface extends JFrame
         }
     }
 
-    class TableModel extends DefaultTableModel
+    class StockTableModel extends DefaultTableModel
     {
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex)
@@ -142,11 +168,11 @@ public class ManageStocksInterface extends JFrame
         int index = stocksTable.getSelectedRow();
         if(index == -1)
         {
-            MessageDialog amountError = new MessageDialog("Error", "Please select a loan!");
+            MessageDialog amountError = new MessageDialog("Error", "Please select a stock!");
             amountError.setVisible(true);
             return null;
         }
-        String stockID = (String)stocksTable.getValueAt(index, 1);
+        String stockID = (String)stocksTable.getValueAt(index, 0);
 
         for(Stock item : bank.getStocks())
         {
@@ -163,10 +189,6 @@ public class ManageStocksInterface extends JFrame
 
     public void refreshStocksTable()
     {
-        if(bank.getStocks().isEmpty())
-        {
-            return;
-        }
         stocksTableModel.setRowCount(0);
         for(Stock item : bank.getStocks())
         {
