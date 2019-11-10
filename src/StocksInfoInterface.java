@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 public class StocksInfoInterface extends JFrame
 {
     Bank bank;
+    Stock selectedStock;
     ManageStocksInterface father;
     StocksInfoInterface self = this;
     ManageStocksType type;
@@ -21,9 +22,10 @@ public class StocksInfoInterface extends JFrame
     JLabel priceLabel = new JLabel("Price");
     JTextField priceField = new JTextField(10);
 
-    StocksInfoInterface(Bank bank, ManageStocksInterface father, ManageStocksType type)
+    StocksInfoInterface(Bank bank, Stock selectedStock, ManageStocksInterface father, ManageStocksType type)
     {
         this.bank = bank;
+        this.selectedStock = selectedStock;
         this.father = father;
         this.type = type;
 
@@ -50,6 +52,14 @@ public class StocksInfoInterface extends JFrame
             idField.setEditable(false);
             nameField.setEditable(false);
             numberField.setEditable(false);
+        }
+
+        if(selectedStock!=null)
+        {
+            idField.setText(selectedStock.getId());
+            nameField.setText(selectedStock.getName());
+            numberField.setText(String.valueOf(selectedStock.getNumber()));
+            priceField.setText(String.format(" %.2f", selectedStock.getPrice()));
         }
 
         GridBagLayout gridBag = new GridBagLayout();
@@ -167,7 +177,39 @@ public class StocksInfoInterface extends JFrame
             }
             if(type.equals(ManageStocksType.MODIFY))    // Modify stock information
             {
+                double newPrice;
 
+                try //price of stocks must not be negative
+                {
+                    newPrice = Double.parseDouble(priceField.getText());
+                    if (newPrice < 0)
+                    {
+                        MessageDialog amountError = new MessageDialog("Error", "Price of stock must not be negative!");
+                        amountError.setVisible(true);
+                        return;
+                    }
+                }
+                catch(NumberFormatException nfe)
+                {
+                    MessageDialog amountError = new MessageDialog("Error", "Price of stock must be a number!");
+                    amountError.setVisible(true);
+                    return;
+                }
+                catch(NullPointerException npe) {
+                    MessageDialog amountError = new MessageDialog("Error", "Price of stock must be a number!");
+                    amountError.setVisible(true);
+                    return;
+                }
+
+                //validation passed, update stock
+                if(selectedStock!=null && bank.getTotalStock().update(selectedStock, newPrice))//actually change value of stock
+                {
+                    closeFrame();
+                    return;
+                }
+
+                MessageDialog message = new MessageDialog("Error", "Update failure! Perhaps you forgot to select a stock?");
+                message.setVisible(true);
             }
         }
     }

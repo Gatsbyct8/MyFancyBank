@@ -100,7 +100,7 @@ public class ManageStocksInterface extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            StocksInfoInterface stocksInfoInterface = new StocksInfoInterface(bank, self, ManageStocksType.ADD);
+            StocksInfoInterface stocksInfoInterface = new StocksInfoInterface(bank, null, self, ManageStocksType.ADD);
             refreshStocksTable();
             setVisible(false);
             stocksInfoInterface.setVisible(true);
@@ -112,7 +112,7 @@ public class ManageStocksInterface extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            Stock selectedStock = getSelectStock();
+            Stock selectedStock = getSelectedStock();
 
             if(selectedStock!=null && bank.getTotalStock().delete(selectedStock)) {
                 MessageDialog deleteSuccess = new MessageDialog("Success", "Stock deleted.");
@@ -147,7 +147,12 @@ public class ManageStocksInterface extends JFrame
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            StocksInfoInterface stocksInfoInterface = new StocksInfoInterface(bank, self, ManageStocksType.MODIFY);
+            Stock selectedStock = getSelectedStock();
+            if(selectedStock == null)
+            {
+                return;
+            }
+            StocksInfoInterface stocksInfoInterface = new StocksInfoInterface(bank, selectedStock, self, ManageStocksType.MODIFY);
             setVisible(false);
             stocksInfoInterface.setVisible(true);
         }
@@ -162,7 +167,7 @@ public class ManageStocksInterface extends JFrame
         }
     }
 
-    private Stock getSelectStock()
+    private Stock getSelectedStock()
     {
         Stock selectedStock = null;
         int index = stocksTable.getSelectedRow();
