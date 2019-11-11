@@ -64,10 +64,15 @@ public class ManagerHomePage extends JFrame
         JButton jbtReport = new JButton("Today Report");
         reportListener reportL = new reportListener();
         jbtReport.addActionListener(reportL);
+        
+        JButton jbtStocks = new JButton("Manage Stocks");
+        stocksListener stocksL = new stocksListener();
+        jbtStocks.addActionListener(stocksL);
 
         add(customerList);
         add(transactionScroll);
         add(jbtReport);
+        add(jbtStocks);
     }
 
     class customerListListener implements ItemListener
@@ -108,6 +113,17 @@ public class ManagerHomePage extends JFrame
         }
     }
 
+    class stocksListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            ManageStocksWindow manageStocksWindow = new ManageStocksWindow(bank, self);
+            setVisible(false);
+            manageStocksWindow.setVisible(true);
+        }
+    }
+    
     public void refreshTransactionTable()
     {
         if(selectedCustomer == null)
