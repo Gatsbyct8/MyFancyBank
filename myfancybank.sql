@@ -129,6 +129,25 @@ CREATE TABLE `bankincome` (
   `accountID` varchar(255) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `amount` double DEFAULT NULL,
+  `sourceNtargetID` varchar(255) DEFAULT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of bankincome
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `bankincome`
+-- ----------------------------
+DROP TABLE IF EXISTS `bankincome`;
+CREATE TABLE `bankincome` (
+  `UserID` varchar(255) DEFAULT NULL,
+  `accountID` varchar(255) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `amount` double DEFAULT NULL,
   `sourceNtargetID` varchar(255) NOT NULL,
   `reason` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`sourceNtargetID`)

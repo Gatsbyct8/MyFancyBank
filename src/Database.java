@@ -15,7 +15,7 @@ public class Database {
     Connection conn = null;
     Statement stmt = null;
     PreparedStatement ps=null;
-    public List<Customer> customerLink(){
+    public List<Customer> linkCustomer(){
         List<Customer> customers=new ArrayList<Customer>();
         try{
             String sql="SELECT * FROM user";
@@ -24,8 +24,8 @@ public class Database {
             loadaccount(sql,customers);
             sql="SELECT * FROM loan";
             loadloan(sql,customers);
-//            sql="SELECT * FROM transcation";
-//            loadtransaction(sql,customers);
+            sql="SELECT * FROM secureaccount";
+            loadsecureaccount(sql,customers);
         }catch(SQLException se){
             // 处理 JDBC 错误
             se.printStackTrace();
@@ -47,12 +47,58 @@ public class Database {
         return customers;
     }
 
-    public List<Manager> managerLink()
-    {
-        List<Manager> managers = new ArrayList<Manager>();
+    private void loadsecureaccount(String sql, List<Customer> customers) throws Exception{
+    }
+
+    public TotalStock linkstock(){
+        TotalStock totalStock=new TotalStock();
+        try{
+            String sql="SELECT * FROM stock";
+            loadstock(sql,totalStock);
+        }catch(SQLException se){
+            // 处理 JDBC 错误
+            se.printStackTrace();
+        }catch(Exception e){
+            // 处理 Class.forName 错误
+            e.printStackTrace();
+        }finally{
+            // 关闭资源
+            try{
+                if(stmt!=null) stmt.close();
+            }catch(SQLException se2){
+            }// 什么都不做
+            try{
+                if(conn!=null) conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+        return totalStock;
+    }
+
+    private void loadstock(String sql, TotalStock totalStock) throws Exception{
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL,USER,PASS);
+        stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        while(rs.next()){
+            String id=rs.getString("id");
+            String name=rs.getString("name");
+            int number =rs.getInt("number");
+            Double currentprice =rs.getDouble("currentprice");
+            Stock stock=new Stock(id,name,number,currentprice);
+            totalStock.add(stock);
+        }
+        rs.close();
+        stmt.close();
+        conn.close();
+    }
+
+    public List<Manager> linkManager(){
+        List<Manager> managers=new ArrayList<Manager>();
         try{
             String sql="SELECT * FROM manager";
-            loadManager(sql,managers);
+            loadmanager(sql,managers);
         }catch(SQLException se){
             // 处理 JDBC 错误
             se.printStackTrace();
@@ -72,6 +118,31 @@ public class Database {
             }
         }
         return managers;
+    }
+
+    private void loadmanager(String sql, List<Manager> managers) throws Exception{
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL,USER,PASS);
+        stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        while(rs.next()){
+            String ManagerID=rs.getString("ManagerID");
+            String passcode=rs.getString("passcode");
+            String firstName=rs.getString("firstName");
+            String lastName=rs.getString("lastName");
+            String phoneNumber=rs.getString("phoneNumber");
+            String street=rs.getString("street");
+            String city=rs.getString("city");
+            String state=rs.getString("state");
+            String zip=rs.getString("zip");
+            Address address=new Address(street,city,state,zip);
+            Name name=new Name(lastName,firstName);
+            Manager manager=new Manager(name,address,phoneNumber,ManagerID,passcode);
+            managers.add(manager);
+        }
+        rs.close();
+        stmt.close();
+        conn.close();
     }
 
     private void loadloan(String sql, List<Customer> customers) throws Exception{
@@ -125,11 +196,38 @@ public class Database {
             Transaction transaction=new Transaction(date,amount,sourceNtargetID);
             transaction.setReason(reason);
             balance.addNewTransaction(transaction);
+
+            loadBankIncome(transaction, accountID);
         }
         rs.close();
         stmt.close();
         conn.close();
     }
+
+    private void loadBankIncome(Transaction transaction, String accountID) throws Exception
+    {
+        if(transaction.getSourceNtargetID().equals("Open account"))
+        {
+            Transaction income = new Transaction(transaction.getDate(), -transaction.getAmount(), accountID);
+            income.setReason("Open account fee");
+            Bank.addIncome(income);
+        }
+
+        if(transaction.getSourceNtargetID().equals("Transaction Fee"))
+        {
+            Transaction income = new Transaction(transaction.getDate(), -transaction.getAmount(), accountID);
+            income.setReason("Transaction fee");
+            Bank.addIncome(income);
+        }
+
+        if(transaction.getSourceNtargetID().equals("Loan interest"))
+        {
+            Transaction income = new Transaction(transaction.getDate(), -transaction.getAmount(), accountID);
+            income.setReason("Loan interest");
+            Bank.addIncome(income);
+        }
+    }
+
     private Currency createCurrency(String currency){
         if(currency.equals("EUR")){
             return Currency.getInstance(Locale.FRANCE);
@@ -141,6 +239,7 @@ public class Database {
             return Currency.getInstance(Locale.JAPAN);
         }
     }
+
     private void loadaccount(String sql, List<Customer> customers) throws Exception{
         Class.forName(JDBC_DRIVER);
         conn = DriverManager.getConnection(DB_URL,USER,PASS);
@@ -161,6 +260,12 @@ public class Database {
             currency = rs.getString("currency");
             amount = rs.getDouble("amount");
             transactionNum = rs.getInt("transactionNum");
+
+            int idNUM = Integer.valueOf(accountID);
+            if(idNUM > maxID)
+            {
+                maxID = idNUM;
+            }
 
             if(maxID < Integer.valueOf(accountID))
             {
@@ -254,14 +359,18 @@ public class Database {
             deletetable();
             String sql="insert into user values (?,?,?,?,?,?,?,?,?)";
             recorduser(sql,bank);
-            sql = "insert into manager values (?,?,?,?,?,?,?,?,?)";
-            recordManager(sql, bank);
             sql="insert into account values (?,?,?,?,?,?)";
             recordaccount(sql,bank);
             sql="insert into loan values (?,?,?,?,?)";
             recordloan(sql,bank);
             sql="insert into transaction(UserID,accountID,date,amount,sourceNtargetID,reason) values (?,?,?,?,?,?)";
             recordtransaction(sql,bank);
+            sql="insert into stock values (?,?,?,?)";
+            recordstock(sql,bank);
+            sql="insert into manager values (?,?,?,?,?,?,?,?,?)";
+            recordmanager(sql,bank);
+            sql="insert into secureaccount values (?,?,?,?,?)";
+            recordsecureaccount(sql,bank);
         }catch(SQLException se){
             // 处理 JDBC 错误
             se.printStackTrace();
@@ -282,8 +391,44 @@ public class Database {
         }
     }
 
+    private void recordsecureaccount(String sql, Bank bank) throws Exception{
+    }
+
+    private void recordmanager(String sql, Bank bank) throws Exception{
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        ps = conn.prepareStatement(sql);
+        List<Manager> managers=bank.getManagers();
+        for(Manager manager:managers) {
+            ps.setString(1, manager.getManagerID());
+            ps.setString(2,manager.getPasscode());
+            ps.setString(3,manager.name.getFirstName());
+            ps.setString(4,manager.name.getLastName());
+            ps.setString(5,manager.phoneNumber);
+            ps.setString(6,manager.address.getStreet());
+            ps.setString(7,manager.address.getCity());
+            ps.setString(8,manager.address.getState());
+            ps.setString(9,manager.address.getZip());
+            ps.executeUpdate();
+        }
+    }
+
+    private void recordstock(String sql, Bank bank) throws Exception{
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        ps = conn.prepareStatement(sql);
+        List<Stock>stocks=bank.getStocks();
+        for(Stock stock:stocks) {
+            ps.setString(1, stock.getId());
+            ps.setString(2,stock.getName());
+            ps.setInt(3,stock.getNumber());
+            ps.setDouble(4,stock.currentPrice);
+            ps.executeUpdate();
+        }
+    }
+
     private void deletetable() throws Exception{
-        String sql[]={"Truncate Table user", "Truncate Table manager", "Truncate Table account", "Truncate Table loan", "Truncate Table transaction ", "Truncate Table bankincome"};
+        String sql[]={"Truncate Table user","Truncate Table account","Truncate Table loan","Truncate Table transaction ","Truncate Table stock ","Truncate Table manager "};
         Class.forName(JDBC_DRIVER);
         conn = DriverManager.getConnection(DB_URL,USER,PASS);
         stmt = conn.createStatement();
@@ -390,51 +535,5 @@ public class Database {
                 }
             }
         }
-    }
-
-    private void recordManager (String sql, Bank bank) throws Exception
-    {
-        Class.forName(JDBC_DRIVER);
-        conn = DriverManager.getConnection(DB_URL, USER, PASS);
-        ps = conn.prepareStatement(sql);
-        List<Manager> managers=bank.getManagers();
-        for(Manager manager : managers) {
-            ps.setString(1, manager.getManagerID());
-            ps.setString(2,manager.getPasscode());
-            ps.setString(3,manager.getName().getFirstName());
-            ps.setString(4,manager.getName().getLastName());
-            ps.setString(5,manager.phoneNumber);
-            ps.setString(6,manager.address.getStreet());
-            ps.setString(7,manager.address.getCity());
-            ps.setString(8,manager.address.getState());
-            ps.setString(9,manager.address.getZip());
-            ps.executeUpdate();
-        }
-    }
-
-    private void loadManager(String sql,List<Manager> managers) throws Exception
-    {
-        Class.forName(JDBC_DRIVER);
-        conn = DriverManager.getConnection(DB_URL,USER,PASS);
-        stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sql);
-        while(rs.next()){
-            String UserID=rs.getString("ManagerID");
-            String passcode=rs.getString("passcode");
-            String firstName=rs.getString("firstName");
-            String lastName=rs.getString("lastName");
-            String phoneNumber=rs.getString("phoneNumber");
-            String street=rs.getString("street");
-            String city=rs.getString("city");
-            String state=rs.getString("state");
-            String zip=rs.getString("zip");
-            Address address=new Address(street,city,state,zip);
-            Name name=new Name(lastName,firstName);
-            Manager manager=new Manager(name,address,phoneNumber,UserID,passcode);
-            managers.add(manager);
-        }
-        rs.close();
-        stmt.close();
-        conn.close();
     }
 }

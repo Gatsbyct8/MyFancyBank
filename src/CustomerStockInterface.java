@@ -89,7 +89,6 @@ public class CustomerStockInterface extends JFrame
         savingAccountPanel.add(savingAccountLabel);
         savingAccountPanel.add(savingAccountJComboBox);
 
-
         JLabel stocksLabel = new JLabel("Stocks");
 
         JTableHeader stockHeader = stockTable.getTableHeader();
@@ -235,7 +234,15 @@ public class CustomerStockInterface extends JFrame
 
     public void refreshStockTable()
     {
-
+        stockTableModel.setRowCount(0);
+        for(Stock item : bank.getStocks())
+        {
+            String id = item.getId();
+            String name = item.getName();
+            //String number = String.valueOf(item.getNumber());
+            String price = String.format(" %.2f", item.getPrice());
+            stockTableModel.addRow(new String[]{id, name, price});
+        }
     }
 
     public void refreshSelfStockTable()
