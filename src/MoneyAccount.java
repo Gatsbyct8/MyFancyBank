@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -21,6 +22,17 @@ public class MoneyAccount extends Account
     public void addNewBalance(Balance newBalance)
     {
         balance.add(newBalance);
+    }
+    
+    public Balance getUSDBalance() {
+    	for(Iterator<Balance> iterator = balance.iterator();iterator.hasNext();) {
+			Balance one = iterator.next();
+			if(one.getCurrency().equals(CurrencyType.getCurrencyType(CurrencyType.USD))) {
+				return one;
+			}
+		}
+    	System.out.println("There is no USD balance");
+    	return null;
     }
 
     public void calculateCurrentInterest(Balance balance, double interestRate)

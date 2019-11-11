@@ -5,7 +5,7 @@ public class SavingAccount extends MoneyAccount
 {
     public static final AccountType type = AccountType.SAVING;
 
-    SavingAccount()
+    public SavingAccount()
     {
         super();
     }

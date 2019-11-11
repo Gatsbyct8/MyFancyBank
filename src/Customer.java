@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -40,6 +41,36 @@ public class Customer extends Person
         newTransaction = new Transaction(new Date(), 5, newCheckingAccount.getAccountID());
         newTransaction.setReason("Open account fee");
         Bank.addIncome(newTransaction);
+    }
+    
+    public boolean openSecureAccount(SavingAccount sa) {
+    	//Need a standard to decide if it is OK to open a secureAccount
+    	//default: US Dollar, based on the USD currency of the balance of the money account
+    	
+    	this.Accounts.add(new SecureAccount());
+    	
+    	return true;
+    }
+    
+    public List<SecureAccount> getSecureAccounts(){
+    	List<SecureAccount> sas = new ArrayList<SecureAccount>();
+    	for(Iterator<Account> iterator = Accounts.iterator();iterator.hasNext();) {
+			Account one = iterator.next();
+			if(one instanceof SecureAccount) {
+				sas.add((SecureAccount)one);
+			}
+		}
+    	return sas;
+    }
+    
+    public Account getAccountById(String id) {
+    	for(Iterator<Account> iterator = Accounts.iterator();iterator.hasNext();) {
+			Account one = iterator.next();
+			if(one.accountID.matches(id)) {
+				return one;
+			}
+		}
+    	return null;
     }
 
     public Name getName()
