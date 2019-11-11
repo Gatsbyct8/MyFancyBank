@@ -47,7 +47,6 @@ public class AccountInterface extends JFrame
         accountList.addItemListener(accountListL);
         for(Account item : accounts)    // add accounts into the accountList
         {
-
             if(item instanceof SavingAccount)
             {
                 SavingAccount savingAccount = (SavingAccount)item;
