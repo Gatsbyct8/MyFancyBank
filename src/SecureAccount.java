@@ -6,6 +6,11 @@ public class SecureAccount extends Account
 {
     List<SelfStock> selfStocks;
     
+    public SecureAccount() {
+        this.setAccountID(Account.maxID);
+        Account.maxIDIncrease();
+    }
+    
     public String toString() {
     	return "Secure Account "+this.accountID;
     }

@@ -18,13 +18,4 @@ public class totalStock{
     	return null;
     }
     
-    public Stock getStockByName(String name) {
-    	for(Iterator<Stock> iterator = StockList.iterator();iterator.hasNext();) {
-			Stock one = iterator.next();
-			if(one.name.matches(name)) {
-				return one;
-			}
-		}
-    	return null;
-    }
 }
