@@ -24,6 +24,8 @@ public class Database {
             loadaccount(sql,customers);
             sql="SELECT * FROM loan";
             loadloan(sql,customers);
+            sql="SELECT * FROM secureaccount";
+            loadsecureaccount(sql,customers);
         }catch(SQLException se){
             // 处理 JDBC 错误
             se.printStackTrace();
@@ -44,6 +46,10 @@ public class Database {
         }
         return customers;
     }
+
+    private void loadsecureaccount(String sql, List<Customer> customers) throws Exception{
+    }
+
     public TotalStock linkstock(){
         TotalStock totalStock=new TotalStock();
         try{
@@ -320,6 +326,8 @@ public class Database {
             recordstock(sql,bank);
             sql="insert into manager values (?,?,?,?,?,?,?,?,?)";
             recordmanager(sql,bank);
+            sql="insert into secureaccount values (?,?,?,?,?)";
+            recordsecureaccount(sql,bank);
         }catch(SQLException se){
             // 处理 JDBC 错误
             se.printStackTrace();
@@ -338,6 +346,9 @@ public class Database {
                 se.printStackTrace();
             }
         }
+    }
+
+    private void recordsecureaccount(String sql, Bank bank) throws Exception{
     }
 
     private void recordmanager(String sql, Bank bank) throws Exception{
