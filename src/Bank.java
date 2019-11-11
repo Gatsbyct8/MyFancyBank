@@ -26,7 +26,7 @@ public class Bank
         ATM newATM = new ATM(this);
         atm.add(newATM);
 
-        initForTest();
+        //initForTest();
     }
 
     public static double getAccountFee()

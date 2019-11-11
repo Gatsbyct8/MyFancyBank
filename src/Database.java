@@ -126,6 +126,7 @@ public class Database {
         String currency;
         Double amount;
         int transactionNum;
+        int maxID = 0;
         while(rs.next()) {
             UserID = rs.getString("UserID");
             accountID = rs.getString("accountID");
@@ -133,6 +134,12 @@ public class Database {
             currency = rs.getString("currency");
             amount = rs.getDouble("amount");
             transactionNum = rs.getInt("transactionNum");
+
+            int idNUM = Integer.valueOf(accountID);
+            if(idNUM > maxID)
+            {
+                maxID = idNUM;
+            }
             for (Customer customer : customers) {
                     if (customer.getUserID().equals(UserID)) {
                         boolean flag=true;
@@ -149,6 +156,7 @@ public class Database {
                     }
             }
         }
+        Account.setMaxID(String.format("%04d", maxID));
         rs.beforeFirst();
         int s=0;
         while(rs.next()){
@@ -180,7 +188,7 @@ public class Database {
 
     private Account createNewAccount(String accountID, String accountType) {
         Account a=null;
-        if(accountType=="checking"){
+        if(accountType.equals("checking")){
             a=new CheckingAccount();
             a.accountID=accountID;
         }else{
