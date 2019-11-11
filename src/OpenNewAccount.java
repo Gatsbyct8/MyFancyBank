@@ -145,8 +145,8 @@ public class OpenNewAccount extends JDialog
             }
 
             // Update the maxID of this bank
-            newAccount.setAccountID(MoneyAccount.getMaxID());
             MoneyAccount.maxIDIncrease();
+            newAccount.setAccountID(MoneyAccount.getMaxID());
             accounts.add(newAccount);
 
             //add the open account fee as income of the bank
