@@ -47,6 +47,13 @@ public class Customer extends Person
     	//Need a standard to decide if it is OK to open a secureAccount
     	//default: US Dollar, based on the USD currency of the balance of the money account
     	
+    	//get the USD balance
+    	//At least 1000 USD
+    	if(sa.getUSDBalance().getAmount()<1000) {
+    		System.out.println("Insufficient amount.");
+    		return false;
+    	}
+    	
     	this.Accounts.add(new SecureAccount());
     	
     	return true;

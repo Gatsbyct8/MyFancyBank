@@ -2,7 +2,7 @@ public class Stock {
     String id;
     String name;
     int number;
-    int currentprice;
+    double currentprice;
     
     public Stock(String id, String name, int number, int currentprice) {
     	this.id = id;

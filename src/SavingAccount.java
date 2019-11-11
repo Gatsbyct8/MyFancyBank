@@ -25,6 +25,8 @@ public class SavingAccount extends MoneyAccount
         newBalance = new Balance(Currency.getInstance(Locale.CHINA));
         balance.add(newBalance);
     }
+    
+    
 
     /*public void moneyTransfer(Transaction transaction, Balance balance)
     {

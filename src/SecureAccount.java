@@ -5,6 +5,11 @@ import java.util.List;
 public class SecureAccount extends Account
 {
     List<SelfStock> selfStocks;
+    
+    public String toString() {
+    	return "Secure Account "+this.accountID;
+    }
+    
     public boolean buy(Stock s, int amt, SavingAccount sa)
     {
     	//check if money is sufficient
