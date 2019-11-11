@@ -24,8 +24,6 @@ public class Database {
             loadaccount(sql,customers);
             sql="SELECT * FROM loan";
             loadloan(sql,customers);
-//            sql="SELECT * FROM transcation";
-//            loadtransaction(sql,customers);
         }catch(SQLException se){
             // 处理 JDBC 错误
             se.printStackTrace();
@@ -45,6 +43,99 @@ public class Database {
             }
         }
         return customers;
+    }
+    public TotalStock linkstock(){
+        TotalStock totalStock=new TotalStock();
+        try{
+            String sql="SELECT * FROM stock";
+            loadstock(sql,totalStock);
+        }catch(SQLException se){
+            // 处理 JDBC 错误
+            se.printStackTrace();
+        }catch(Exception e){
+            // 处理 Class.forName 错误
+            e.printStackTrace();
+        }finally{
+            // 关闭资源
+            try{
+                if(stmt!=null) stmt.close();
+            }catch(SQLException se2){
+            }// 什么都不做
+            try{
+                if(conn!=null) conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+        return totalStock;
+    }
+    private void loadstock(String sql, TotalStock totalStock) throws Exception{
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL,USER,PASS);
+        stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        while(rs.next()){
+            String id=rs.getString("id");
+            String name=rs.getString("name");
+            int number =rs.getInt("number");
+            Double currentprice =rs.getDouble("currentprice");
+            Stock stock=new Stock(id,name,number,currentprice);
+            totalStock.add(stock);
+        }
+        rs.close();
+        stmt.close();
+        conn.close();
+    }
+
+    public List<Manager> linkManager(){
+        List<Manager> managers=new ArrayList<Manager>();
+        try{
+            String sql="SELECT * FROM user";
+            loadmanager(sql,managers);
+        }catch(SQLException se){
+            // 处理 JDBC 错误
+            se.printStackTrace();
+        }catch(Exception e){
+            // 处理 Class.forName 错误
+            e.printStackTrace();
+        }finally{
+            // 关闭资源
+            try{
+                if(stmt!=null) stmt.close();
+            }catch(SQLException se2){
+            }// 什么都不做
+            try{
+                if(conn!=null) conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+        return managers;
+    }
+
+    private void loadmanager(String sql, List<Manager> managers) throws Exception{
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL,USER,PASS);
+        stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        while(rs.next()){
+            String ManagerID=rs.getString("ManagerID");
+            String passcode=rs.getString("passcode");
+            String firstName=rs.getString("firstName");
+            String lastName=rs.getString("lastName");
+            String phoneNumber=rs.getString("phoneNumber");
+            String street=rs.getString("street");
+            String city=rs.getString("city");
+            String state=rs.getString("state");
+            String zip=rs.getString("zip");
+            Address address=new Address(street,city,state,zip);
+            Name name=new Name(lastName,firstName);
+            Manager manager=new Manager(name,address,phoneNumber,ManagerID,passcode);
+            managers.add(manager);
+        }
+        rs.close();
+        stmt.close();
+        conn.close();
     }
 
     private void loadloan(String sql, List<Customer> customers) throws Exception{
@@ -225,6 +316,10 @@ public class Database {
             recordloan(sql,bank);
             sql="insert into transaction(UserID,accountID,date,amount,sourceNtargetID,reason) values (?,?,?,?,?,?)";
             recordtransaction(sql,bank);
+            sql="insert into stock values (?,?,?,?)";
+            recordstock(sql,bank);
+            sql="insert into manager values (?,?,?,?,?,?,?,?,?)";
+            recordmanager(sql,bank);
         }catch(SQLException se){
             // 处理 JDBC 错误
             se.printStackTrace();
@@ -245,8 +340,41 @@ public class Database {
         }
     }
 
+    private void recordmanager(String sql, Bank bank) throws Exception{
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        ps = conn.prepareStatement(sql);
+        List<Manager> managers=bank.getManagers();
+        for(Manager manager:managers) {
+            ps.setString(1, manager.getManagerID());
+            ps.setString(2,manager.getPasscode());
+            ps.setString(3,manager.name.getFirstName());
+            ps.setString(4,manager.name.getLastName());
+            ps.setString(5,manager.phoneNumber);
+            ps.setString(6,manager.address.getStreet());
+            ps.setString(7,manager.address.getCity());
+            ps.setString(8,manager.address.getState());
+            ps.setString(9,manager.address.getZip());
+            ps.executeUpdate();
+        }
+    }
+
+    private void recordstock(String sql, Bank bank) throws Exception{
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        ps = conn.prepareStatement(sql);
+        List<Stock>stocks=bank.getStocks();
+        for(Stock stock:stocks) {
+            ps.setString(1, stock.id);
+            ps.setString(2,stock.name);
+            ps.setInt(3,stock.getNumber());
+            ps.setDouble(4,stock.currentPrice);
+            ps.executeUpdate();
+        }
+    }
+
     private void deletetable() throws Exception{
-        String sql[]={"Truncate Table user","Truncate Table account","Truncate Table loan","Truncate Table transaction "};
+        String sql[]={"Truncate Table user","Truncate Table account","Truncate Table loan","Truncate Table transaction ","Truncate Table stock ","Truncate Table manager "};
         Class.forName(JDBC_DRIVER);
         conn = DriverManager.getConnection(DB_URL,USER,PASS);
         stmt = conn.createStatement();
