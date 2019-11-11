@@ -15,7 +15,7 @@ public class Database {
     Connection conn = null;
     Statement stmt = null;
     PreparedStatement ps=null;
-    public List<Customer> link(){
+    public List<Customer> link(Bank bank){
         List<Customer> customers=new ArrayList<Customer>();
         try{
             String sql="SELECT * FROM user";
@@ -25,7 +25,7 @@ public class Database {
             sql="SELECT * FROM loan";
             loadloan(sql,customers);
             sql="SELECT * FROM secureaccount";
-            loadsecureaccount(sql,customers);
+            loadsecureaccount(sql,customers,bank);
         }catch(SQLException se){
             // 处理 JDBC 错误
             se.printStackTrace();
@@ -47,7 +47,29 @@ public class Database {
         return customers;
     }
 
-    private void loadsecureaccount(String sql, List<Customer> customers) throws Exception{
+    private void loadsecureaccount(String sql, List<Customer> customers,Bank bank) throws Exception{
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL,USER,PASS);
+        stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        while(rs.next()){
+            String UserId=rs.getString("UserId");
+            String id=rs.getString("id");
+            Double buyprice=rs.getDouble("buyprice");
+            int amount =rs.getInt("amount");
+            for (Stock stock:bank.getStocks()){
+                if(stock.id.equals(id)){
+                    for (Customer customer:customers){
+                        if(customer.getUserID().equals(UserId)){
+                            customer.getSelfStocks().add(new SelfStock(stock,buyprice,amount));
+                        }
+                    }
+                }
+            }
+        }
+        rs.close();
+        stmt.close();
+        conn.close();
     }
 
     public TotalStock linkstock(){
@@ -326,7 +348,7 @@ public class Database {
             recordstock(sql,bank);
             sql="insert into manager values (?,?,?,?,?,?,?,?,?)";
             recordmanager(sql,bank);
-            sql="insert into secureaccount values (?,?,?,?,?)";
+            sql="insert into secureaccount values (?,?,?,?)";
             recordsecureaccount(sql,bank);
         }catch(SQLException se){
             // 处理 JDBC 错误
@@ -349,6 +371,19 @@ public class Database {
     }
 
     private void recordsecureaccount(String sql, Bank bank) throws Exception{
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        ps = conn.prepareStatement(sql);
+        List<Customer> customers=bank.getCustomers();
+        for(Customer customer:customers) {
+            for(SelfStock selfStock:customer.getSelfStocks()) {
+                ps.setString(1, customer.getUserID());
+                ps.setString(2, selfStock.getStock().getId());
+                ps.setDouble(3, selfStock.getBuyPrice());
+                ps.setInt(4,selfStock.getAmount() );
+                ps.executeUpdate();
+            }
+        }
     }
 
     private void recordmanager(String sql, Bank bank) throws Exception{

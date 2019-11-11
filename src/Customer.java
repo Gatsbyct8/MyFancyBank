@@ -12,7 +12,9 @@ public class Customer extends Person
     private List<Account> Accounts;
     private List<Loan> loans;   // loans of this customer
     private List<SelfStock> selfStocks; //Stocks purchased by the customer
-
+    public List<SelfStock> getSelfStocks(){
+        return this.selfStocks;
+    }
     Customer(Name name, Address address, String phoneNumber, String UserID, String passcode)
     {
         super(name, address, phoneNumber);

@@ -122,9 +122,9 @@ public class Bank
     {
         Database database=new Database();
         Bank bank = new Bank();
-        bank.customers=database.link();
-        bank.managers=database.linkManager();
         bank.totalStock=database.linkstock();
+        bank.customers=database.link(bank);
+        bank.managers=database.linkManager();
         bank.RunATM(0);
     }
 
