@@ -42,10 +42,17 @@ public class LoanInterface extends JFrame
         });
 
         JLabel amountLabel = new JLabel("Amount");
+        Font f = new Font("", Font.BOLD, 16);
+        amountLabel.setFont(f);
+        amountField.setFont(f);
+        JPanel amountPanel = new JPanel(new FlowLayout());
+        amountPanel.add(amountLabel);
+        amountPanel.add(amountField);
 
         JLabel accountLabel = new JLabel("Account");
         accountList.setEditable(false);
         accountList.setEnabled(true);
+        accountList.setPreferredSize(new Dimension(175,20));
         accountListListener accountListL = new accountListListener();
         accountList.addItemListener(accountListL);
         for(Account item : accounts)    // add accounts into the accountList
@@ -120,20 +127,19 @@ public class LoanInterface extends JFrame
         jbtRepay.addActionListener(repayL);
 
         Dimension buttonSize = new Dimension(100,30);
-        Font f = new Font("", Font.BOLD, 15);
+        Font buttonF = new Font("", Font.BOLD, 15);
         jbtLoan.setPreferredSize(buttonSize);
-        jbtLoan.setFont(f);
+        jbtLoan.setFont(buttonF);
         jbtRepay.setPreferredSize(buttonSize);
-        jbtRepay.setFont(f);
+        jbtRepay.setFont(buttonF);
 
         GridBagLayout gridBag = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
         JPanel panel = new JPanel(gridBag);
 
         c.insets = new Insets(10,5,10,5);
-        gridBag.addLayoutComponent(amountLabel, c);
         c.gridwidth = GridBagConstraints.REMAINDER;
-        gridBag.addLayoutComponent(amountField, c);
+        gridBag.addLayoutComponent(amountPanel, c);
         c = new GridBagConstraints();
         c.insets = new Insets(10,5,10,5);
         gridBag.addLayoutComponent(accountPanel, c);
@@ -144,6 +150,7 @@ public class LoanInterface extends JFrame
         gridBag.addLayoutComponent(repayAccountPanel, c);
         gridBag.addLayoutComponent(jbtRepay, c);
 
+        panel.add(amountPanel);
         panel.add(accountPanel);
         panel.add(collateralPanel);
         panel.add(jbtLoan);
