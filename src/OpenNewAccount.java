@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class OpenNewAccount extends JDialog
@@ -95,8 +95,8 @@ public class OpenNewAccount extends JDialog
             if(USDBox.isSelected())
             {
                 Balance newBalance = new Balance(CurrencyType.getCurrencyType(CurrencyType.USD));
-                Transaction firstDeposit = new Transaction(new Date(), Bank.getAccountFee(), "Deposit");
-                Transaction openAccountFee = new Transaction(new Date(), -Bank.getAccountFee(), "Open Account Fee");
+                Transaction firstDeposit = new Transaction(new Date(System.currentTimeMillis()), Bank.getAccountFee(), "Deposit");
+                Transaction openAccountFee = new Transaction(new Date(System.currentTimeMillis()), -Bank.getAccountFee(), "Open Account Fee");
                 newBalance.addNewTransaction(firstDeposit);
                 newBalance.addNewTransaction(openAccountFee);
                 newAccount.addNewBalance(newBalance);
@@ -130,7 +130,7 @@ public class OpenNewAccount extends JDialog
             accounts.add(newAccount);
 
             //add the open account fee as income of the bank
-            Transaction accountFee = new Transaction(new Date(), Bank.getAccountFee(), newAccount.getAccountID());
+            Transaction accountFee = new Transaction(new Date(System.currentTimeMillis()), Bank.getAccountFee(), newAccount.getAccountID());
             accountFee.setReason("Open account");
             Bank.addIncome(accountFee);
 

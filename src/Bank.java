@@ -117,7 +117,9 @@ public class Bank
 
     public static void main(String[] args)
     {
+        Database database=new Database();
         Bank bank = new Bank();
+        bank.customers=database.link();
         bank.RunATM(0);
     }
 

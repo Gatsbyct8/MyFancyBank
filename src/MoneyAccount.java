@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 
@@ -27,7 +27,7 @@ public class MoneyAccount extends Account
     {
         List<Transaction> transactions = balance.getTransactions();
         Date lastTransactionDate = null;
-        Date now = new Date();
+        Date now = new Date(System.currentTimeMillis());
         if(transactions.size() > 0)
         {
             Transaction lastTransaction = transactions.get(transactions.size() - 1);
@@ -47,7 +47,7 @@ public class MoneyAccount extends Account
         {
             return;
         }
-        Transaction interestTransaction = new Transaction(new Date(), interest, "Interest");
+        Transaction interestTransaction = new Transaction(new Date(System.currentTimeMillis()), interest, "Interest");
         balance.addNewTransaction(interestTransaction);
     }
 
@@ -57,7 +57,7 @@ public class MoneyAccount extends Account
         double balanceAmount = balance.getAmount();
         if((amount) <= balanceAmount)
         {
-            Transaction newWithdraw = new Transaction(new Date(), -amount, "Withdraw");
+            Transaction newWithdraw = new Transaction(new Date(System.currentTimeMillis()), -amount, "Withdraw");
             balance.addNewTransaction(newWithdraw);
             return true;
         }
@@ -70,7 +70,7 @@ public class MoneyAccount extends Account
     public void deposit(Balance balance, double interestRate, double amount)
     {
         calculateCurrentInterest(balance, interestRate);
-        Transaction newDeposit = new Transaction(new Date(), amount, "Deposit");
+        Transaction newDeposit = new Transaction(new Date(System.currentTimeMillis()), amount, "Deposit");
         balance.addNewTransaction(newDeposit);
     }
 
@@ -78,12 +78,12 @@ public class MoneyAccount extends Account
     {
         calculateCurrentInterest(balance, interestRate);
         double transactionFee = amount * Bank.getTransactionFeeRate() * 0.01;
-        Transaction newTransaction = new Transaction(new Date(), amount, targetMoneyAccount.getAccountID());
+        Transaction newTransaction = new Transaction(new Date(System.currentTimeMillis()), amount, targetMoneyAccount.getAccountID());
         balance.addNewTransaction(newTransaction);
-        Transaction newTransactionFee = new Transaction(new Date(), -transactionFee, "Transaction fee");
+        Transaction newTransactionFee = new Transaction(new Date(System.currentTimeMillis()), -transactionFee, "Transaction fee");
         balance.addNewTransaction(newTransactionFee);
 
-        Transaction fee = new Transaction(new Date(), transactionFee, accountID);
+        Transaction fee = new Transaction(new Date(System.currentTimeMillis()), transactionFee, accountID);
         fee.setReason("Transaction fee");
         Bank.addIncome(fee);
     }

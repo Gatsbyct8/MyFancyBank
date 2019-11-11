@@ -78,10 +78,12 @@ public class HomePage extends JFrame
             ManagerLogin.setVisible(true);
         }
     }
-
+    
     private void closeFrame()
     {
         //add your code here
+        Database database=new Database();
+        database.record(bank);
         dispose(); //dispose the frame and exit the program
     }
 }

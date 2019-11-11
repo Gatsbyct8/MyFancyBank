@@ -13,4 +13,19 @@ public class Address
         this.zip = zip;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getZip() {
+        return zip;
+    }
 }

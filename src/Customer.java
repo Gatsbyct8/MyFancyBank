@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -29,7 +29,7 @@ public class Customer extends Person
         MoneyAccount.maxIDIncrease();
         newSavingAccount.initForTest();
         Accounts.add(newSavingAccount);
-        Transaction newTransaction = new Transaction(new Date(), 5, newSavingAccount.getAccountID());
+        Transaction newTransaction = new Transaction(new Date(System.currentTimeMillis()), 5, newSavingAccount.getAccountID());
         newTransaction.setReason("Open account fee");
         Bank.addIncome(newTransaction);
 
@@ -38,7 +38,7 @@ public class Customer extends Person
         MoneyAccount.maxIDIncrease();
         newCheckingAccount.initForTest();
         Accounts.add(newCheckingAccount);
-        newTransaction = new Transaction(new Date(), 5, newCheckingAccount.getAccountID());
+        newTransaction = new Transaction(new Date(System.currentTimeMillis()), 5, newCheckingAccount.getAccountID());
         newTransaction.setReason("Open account fee");
         Bank.addIncome(newTransaction);
     }
@@ -87,7 +87,7 @@ public class Customer extends Person
         }
 
         long startTime = repayLoan.getDate().getTime();
-        long endTime = new Date().getTime();
+        long endTime = new Date(System.currentTimeMillis()).getTime();
         int seconds = (int)((endTime - startTime) / 1000);
         int loanTime = seconds/5 + 1;   // Once the customer loan money, there will be interest, slightly different with deposit interest, for the bank wants to make more money
 
@@ -108,13 +108,13 @@ public class Customer extends Person
         }
         else
         {
-            Transaction repayTransaction = new Transaction(new Date(), -repayLoan.getAmount(), "Loan repay");
+            Transaction repayTransaction = new Transaction(new Date(System.currentTimeMillis()), -repayLoan.getAmount(), "Loan repay");
             balance.addNewTransaction(repayTransaction);
-            Transaction repayFeeTransaction = new Transaction(new Date(), -interest, "Loan interest");
+            Transaction repayFeeTransaction = new Transaction(new Date(System.currentTimeMillis()), -interest, "Loan interest");
             balance.addNewTransaction(repayFeeTransaction);
 
             // profit of this loan
-            Transaction loanFee = new Transaction(new Date(), interest, moneyAccount.getAccountID());
+            Transaction loanFee = new Transaction(new Date(System.currentTimeMillis()), interest, moneyAccount.getAccountID());
             loanFee.setReason("Loan interest");
             Bank.addIncome(loanFee);
 
