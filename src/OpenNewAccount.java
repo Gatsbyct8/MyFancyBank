@@ -20,9 +20,6 @@ public class OpenNewAccount extends JDialog
         this.father = father;
         this.accounts = accounts;
         setTitle("Open Account");
-        setSize(500,700);
-        setLayout(new FlowLayout());
-        setLocationRelativeTo(null);
         addWindowListener(new WindowAdapter()
         {
             @Override
@@ -32,6 +29,7 @@ public class OpenNewAccount extends JDialog
             }
         });
 
+        accountType.setPreferredSize(new Dimension(100,20));
         accountType.setEditable(false);
         accountType.setEnabled(true);
         for(AccountType item : AccountType.values())
@@ -61,10 +59,32 @@ public class OpenNewAccount extends JDialog
         cancelListener cancelL = new cancelListener();
         jbtCancel.addActionListener(cancelL);
 
-        add(accountType);
-        add(currencyType);
-        add(jbtOK);
-        add(jbtCancel);
+        Dimension buttonSize = new Dimension(75,20);
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        jbtOK.setPreferredSize(buttonSize);
+        jbtCancel.setPreferredSize(buttonSize);
+        buttonPanel.add(jbtOK);
+        buttonPanel.add(jbtCancel);
+
+        GridBagLayout gridBag = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
+        JPanel panel = new JPanel(gridBag);
+
+        c.insets = new Insets(10,5,10,5);
+        gridBag.addLayoutComponent(accountType, c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(currencyType, c);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBag.addLayoutComponent(buttonPanel, c);
+
+        panel.add(accountType);
+        panel.add(currencyType);
+        panel.add(buttonPanel);
+
+        setContentPane(panel);
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     class accountTypeListener implements ItemListener
@@ -150,7 +170,7 @@ public class OpenNewAccount extends JDialog
 
     private void closeFrame()
     {
-        father.setEnabled(true);
+        father.setVisible(true);
         dispose();
     }
 }

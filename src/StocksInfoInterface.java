@@ -40,10 +40,13 @@ public class StocksInfoInterface extends JFrame
             }
         });
 
+        Dimension buttonSize = new Dimension(90,25);
         JButton jbtOK = new JButton("OK");
+        jbtOK.setPreferredSize(buttonSize);
         OKListener okL = new OKListener();
         jbtOK.addActionListener(okL);
         JButton jbtCancel = new JButton("Cancel");
+        jbtCancel.setPreferredSize(buttonSize);
         CancelListener CancelL = new CancelListener();
         jbtCancel.addActionListener(CancelL);
 
