@@ -287,7 +287,7 @@ public class AccountInterface extends JFrame
         public void actionPerformed(ActionEvent e)
         {
             OpenNewAccount openNewAccount = new OpenNewAccount(accounts, self);
-            setEnabled(false);
+            setVisible(false);
             openNewAccount.setVisible(true);
         }
     }
