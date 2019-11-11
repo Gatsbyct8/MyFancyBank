@@ -13,6 +13,11 @@ public class Manager extends Person
         this.passcode = passcode;
     }
 
+    public Name getName()
+    {
+        return name;
+    }
+
     public String getPasscode()
     {
         return passcode;

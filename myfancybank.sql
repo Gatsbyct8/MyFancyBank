@@ -1,15 +1,12 @@
 /*
 Navicat MySQL Data Transfer
-
 Source Server         : test1
 Source Server Version : 50718
 Source Host           : localhost:3306
 Source Database       : myfancybank
-
 Target Server Type    : MYSQL
 Target Server Version : 50718
 File Encoding         : 65001
-
 Date: 2019-11-10 10:52:44
 */
 
@@ -32,12 +29,6 @@ CREATE TABLE `account` (
 -- ----------------------------
 -- Records of account
 -- ----------------------------
-INSERT INTO `account` VALUES ('yff', '0001', 'saving', 'CNY', '0', '0');
-INSERT INTO `account` VALUES ('yff', '0001', 'saving', 'EUR', '0', '0');
-INSERT INTO `account` VALUES ('yff', '0001', 'saving', 'USD', '100', '2');
-INSERT INTO `account` VALUES ('yff', '0002', 'checking', 'CNY', '0', '0');
-INSERT INTO `account` VALUES ('yff', '0002', 'checking', 'EUR', '0', '0');
-INSERT INTO `account` VALUES ('yff', '0002', 'checking', 'USD', '100', '2');
 
 -- ----------------------------
 -- Table structure for `loan`
@@ -128,10 +119,24 @@ CREATE TABLE `transaction` (
 -- ----------------------------
 -- Records of transaction
 -- ----------------------------
-INSERT INTO `transaction` VALUES ('yff', '0001', '2019-11-10', '5', 'Deposit', null, '1');
-INSERT INTO `transaction` VALUES ('yff', '0001', '2019-11-10', '-5', 'Open account', null, '2');
-INSERT INTO `transaction` VALUES ('yff', '0002', '2019-11-10', '5', 'Deposit', null, '3');
-INSERT INTO `transaction` VALUES ('yff', '0002', '2019-11-10', '-5', 'Open account', null, '4');
+
+-- ----------------------------
+-- Table structure for `bankincome`
+-- ----------------------------
+DROP TABLE IF EXISTS `bankincome`;
+CREATE TABLE `bankincome` (
+  `UserID` varchar(255) DEFAULT NULL,
+  `accountID` varchar(255) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `amount` double DEFAULT NULL,
+  `sourceNtargetID` varchar(255) NOT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`sourceNtargetID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of bankincome
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for `user`
@@ -153,4 +158,3 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('yff', 'passcode', 'Fang', 'Yifei', '6179389691', '457 Park Drive', 'Boston', 'MA', '02215');

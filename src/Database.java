@@ -15,7 +15,7 @@ public class Database {
     Connection conn = null;
     Statement stmt = null;
     PreparedStatement ps=null;
-    public List<Customer> link(){
+    public List<Customer> customerLink(){
         List<Customer> customers=new ArrayList<Customer>();
         try{
             String sql="SELECT * FROM user";
@@ -45,6 +45,33 @@ public class Database {
             }
         }
         return customers;
+    }
+
+    public List<Manager> managerLink()
+    {
+        List<Manager> managers = new ArrayList<Manager>();
+        try{
+            String sql="SELECT * FROM manager";
+            loadManager(sql,managers);
+        }catch(SQLException se){
+            // 处理 JDBC 错误
+            se.printStackTrace();
+        }catch(Exception e){
+            // 处理 Class.forName 错误
+            e.printStackTrace();
+        }finally{
+            // 关闭资源
+            try{
+                if(stmt!=null) stmt.close();
+            }catch(SQLException se2){
+            }// 什么都不做
+            try{
+                if(conn!=null) conn.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+        return managers;
     }
 
     private void loadloan(String sql, List<Customer> customers) throws Exception{
@@ -126,7 +153,7 @@ public class Database {
         String currency;
         Double amount;
         int transactionNum;
-        int maxID = 0;
+        int maxID = 1;
         while(rs.next()) {
             UserID = rs.getString("UserID");
             accountID = rs.getString("accountID");
@@ -221,11 +248,14 @@ public class Database {
         stmt.close();
         conn.close();
     }
+
     public void record(Bank bank){
         try{
             deletetable();
             String sql="insert into user values (?,?,?,?,?,?,?,?,?)";
             recorduser(sql,bank);
+            sql = "insert into manager values (?,?,?,?,?,?,?,?,?)";
+            recordManager(sql, bank);
             sql="insert into account values (?,?,?,?,?,?)";
             recordaccount(sql,bank);
             sql="insert into loan values (?,?,?,?,?)";
@@ -253,7 +283,7 @@ public class Database {
     }
 
     private void deletetable() throws Exception{
-        String sql[]={"Truncate Table user","Truncate Table account","Truncate Table loan","Truncate Table transaction "};
+        String sql[]={"Truncate Table user", "Truncate Table manager", "Truncate Table account", "Truncate Table loan", "Truncate Table transaction ", "Truncate Table bankincome"};
         Class.forName(JDBC_DRIVER);
         conn = DriverManager.getConnection(DB_URL,USER,PASS);
         stmt = conn.createStatement();
@@ -282,6 +312,7 @@ public class Database {
             ps.executeUpdate();
         }
     }
+
     private void recordaccount(String sql, Bank bank) throws Exception{
         Class.forName(JDBC_DRIVER);
         conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -314,6 +345,7 @@ public class Database {
             }
         }
     }
+
     private void recordloan(String sql, Bank bank) throws Exception{
         Class.forName(JDBC_DRIVER);
         conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -336,6 +368,7 @@ public class Database {
             }
         }
     }
+
     private void recordtransaction(String sql, Bank bank) throws Exception{
         Class.forName(JDBC_DRIVER);
         conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -357,5 +390,51 @@ public class Database {
                 }
             }
         }
+    }
+
+    private void recordManager (String sql, Bank bank) throws Exception
+    {
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL, USER, PASS);
+        ps = conn.prepareStatement(sql);
+        List<Manager> managers=bank.getManagers();
+        for(Manager manager : managers) {
+            ps.setString(1, manager.getManagerID());
+            ps.setString(2,manager.getPasscode());
+            ps.setString(3,manager.getName().getFirstName());
+            ps.setString(4,manager.getName().getLastName());
+            ps.setString(5,manager.phoneNumber);
+            ps.setString(6,manager.address.getStreet());
+            ps.setString(7,manager.address.getCity());
+            ps.setString(8,manager.address.getState());
+            ps.setString(9,manager.address.getZip());
+            ps.executeUpdate();
+        }
+    }
+
+    private void loadManager(String sql,List<Manager> managers) throws Exception
+    {
+        Class.forName(JDBC_DRIVER);
+        conn = DriverManager.getConnection(DB_URL,USER,PASS);
+        stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        while(rs.next()){
+            String UserID=rs.getString("ManagerID");
+            String passcode=rs.getString("passcode");
+            String firstName=rs.getString("firstName");
+            String lastName=rs.getString("lastName");
+            String phoneNumber=rs.getString("phoneNumber");
+            String street=rs.getString("street");
+            String city=rs.getString("city");
+            String state=rs.getString("state");
+            String zip=rs.getString("zip");
+            Address address=new Address(street,city,state,zip);
+            Name name=new Name(lastName,firstName);
+            Manager manager=new Manager(name,address,phoneNumber,UserID,passcode);
+            managers.add(manager);
+        }
+        rs.close();
+        stmt.close();
+        conn.close();
     }
 }

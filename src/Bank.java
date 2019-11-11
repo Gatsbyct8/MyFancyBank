@@ -24,10 +24,10 @@ public class Bank
         customers = new ArrayList<>();
         totalStock = new TotalStock();
         atm = new ArrayList<>();
+
+        //initForTest();
         ATM newATM = new ATM(this);
         atm.add(newATM);
-
-        initForTest();
     }
 
     public static double getAccountFee()
@@ -75,17 +75,17 @@ public class Bank
         Name customerName = new Name("Yifei", "Fang");
         Address customerAddress = new Address("457 Park Drive", "Boston", "MA", "02215");
         String customerPhone = "6179389691";
-        String customerID = "ID";
-        String customerPasscode = "PASSCODE";
+        String customerID = "yff";
+        String customerPasscode = "passcode";
         Customer defaultCustomer = new Customer(customerName, customerAddress, customerPhone, customerID, customerPasscode);
         defaultCustomer.initForTest();
         customers.add(defaultCustomer);
 
-        Name managerName = new Name("Mana", "Ger");
+        Name managerName = new Name("CAS", "BU");
         Address managerAddress = new Address("725 Commonwealth Avenue", "Boston", "MA", "02215");
         String managerPhone = "6173532401";
-        String managerID = "ID";
-        String managerPasscode = "PASSCODE";
+        String managerID = "CAS";
+        String managerPasscode = "123456789";
         Manager defaultManager = new Manager(managerName, managerAddress, managerPhone, managerID, managerPasscode);
         managers.add(defaultManager);
     }
@@ -119,7 +119,9 @@ public class Bank
     {
         Database database=new Database();
         Bank bank = new Bank();
-        bank.customers=database.link();
+        bank.customers=database.customerLink();
+        bank.managers=database.managerLink();
+        //bank.initForTest();
         bank.RunATM(0);
     }
 
