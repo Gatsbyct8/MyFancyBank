@@ -57,11 +57,24 @@ public class Database {
             String id=rs.getString("id");
             Double buyprice=rs.getDouble("buyprice");
             int amount =rs.getInt("amount");
+            String accountID=rs.getNString("accountID");
             for (Stock stock:bank.getStocks()){
                 if(stock.id.equals(id)){
+                    SelfStock selfStock=new SelfStock(stock,buyprice,amount);
                     for (Customer customer:customers){
                         if(customer.getUserID().equals(UserId)){
-                            customer.getSelfStocks().add(new SelfStock(stock,buyprice,amount));
+                            boolean flag=true;
+                            for(Account account:customer.getAccounts()) {
+                                if(account.accountID.equals(accountID)) {
+                                    SecureAccount secureAccount = (SecureAccount) account;
+                                    secureAccount.selfStock.add(selfStock);
+                                    flag=false;
+                                }
+                            }
+                            if(flag==true){
+                                SecureAccount secureAccount=new SecureAccount();
+                                secureAccount.selfStock.add(selfStock);
+                            }
                         }
                     }
                 }
@@ -376,12 +389,15 @@ public class Database {
         ps = conn.prepareStatement(sql);
         List<Customer> customers=bank.getCustomers();
         for(Customer customer:customers) {
-            for(SelfStock selfStock:customer.getSelfStocks()) {
-                ps.setString(1, customer.getUserID());
-                ps.setString(2, selfStock.getStock().getId());
-                ps.setDouble(3, selfStock.getBuyPrice());
-                ps.setInt(4,selfStock.getAmount() );
-                ps.executeUpdate();
+            for (Account account : customer.getAccounts()) {
+                if(account instanceof  SecureAccount)
+                for (SelfStock selfStock : ((SecureAccount) account).selfStock) {
+                    ps.setString(1, customer.getUserID());
+                    ps.setString(2, selfStock.getStock().getId());
+                    ps.setDouble(3, selfStock.getBuyPrice());
+                    ps.setInt(4, selfStock.getAmount());
+                    ps.executeUpdate();
+                }
             }
         }
     }

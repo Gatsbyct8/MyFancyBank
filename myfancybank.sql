@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50718
 File Encoding         : 65001
 
-Date: 2019-11-11 15:34:31
+Date: 2019-11-11 16:33:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -83,10 +83,11 @@ CREATE TABLE `manager` (
 DROP TABLE IF EXISTS `secureaccount`;
 CREATE TABLE `secureaccount` (
   `UserID` varchar(255) DEFAULT NULL,
-  `id` varchar(255) NOT NULL,
+  `id` varchar(255) DEFAULT NULL,
   `buyprice` double DEFAULT NULL,
   `amount` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `accountID` varchar(255) NOT NULL,
+  PRIMARY KEY (`accountID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
