@@ -8,6 +8,7 @@
  utf8 -- UTF-8 Unicode  
  utf8_general_ci  
  run myfancybank.sql to init database
+ (use "source filepath\myfancybank.sql" in the database)
  
  add mysql-connector-java-5.1.48.jar into library
  
